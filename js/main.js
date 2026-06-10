@@ -4,6 +4,7 @@
 
 const GH_USER = 'helenadequeiroz';
 const GH_REPO = 'atelieartpresente';
+const GH_RAW  = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main`;
 const GH_API  = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents`;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -45,29 +46,144 @@ function reObserve(container) {
 }
 
 // ════════════════════════════════════════════
-//   GITHUB API — buscar arquivos de uma pasta
+//   PARSE FRONTMATTER
+//   O Decap CMS salva arquivos .md com frontmatter YAML
+//   Exemplo:
+//     ---
+//     title: "Lenço Chakras"
+//     category: lencos
+//     images:
+//       - image: /images/uploads/foto.jpg
+//     ---
+//     Conteúdo markdown do corpo
+// ════════════════════════════════════════════
+function parseFrontmatter(text) {
+  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return { data: {}, body: text };
+
+  const yaml = match[1];
+  const body = text.slice(match[0].length).trim();
+  const data = {};
+
+  // Parser YAML simples que cobre os campos do CMS
+  const lines = yaml.split('\n');
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    // lista (item de array com indentação)
+    const listItemMatch = line.match(/^(\s+)-\s+(.*)$/);
+    const keyMatch      = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)$/);
+
+    if (keyMatch) {
+      const key = keyMatch[1].trim();
+      let val   = keyMatch[2].trim();
+
+      // Verificar se a próxima linha é um array
+      if (val === '' && lines[i + 1] && lines[i + 1].match(/^\s+-/)) {
+        // array de itens
+        const arr = [];
+        i++;
+        while (i < lines.length && lines[i].match(/^\s+-/)) {
+          const itemLine = lines[i].replace(/^\s+-\s*/, '').trim();
+          // item pode ser string ou objeto inline
+          if (itemLine.match(/^[a-zA-Z_]+\s*:/)) {
+            // objeto com propriedades nas linhas seguintes
+            const obj = {};
+            const subMatch = itemLine.match(/^([a-zA-Z_]+)\s*:\s*(.*)$/);
+            if (subMatch) obj[subMatch[1]] = cleanYamlValue(subMatch[2]);
+            i++;
+            while (i < lines.length && lines[i].match(/^\s{2,}[a-zA-Z_]+\s*:/)) {
+              const sub = lines[i].match(/^\s+([a-zA-Z_]+)\s*:\s*(.*)$/);
+              if (sub) obj[sub[1]] = cleanYamlValue(sub[2]);
+              i++;
+            }
+            arr.push(obj);
+            continue;
+          } else {
+            arr.push(cleanYamlValue(itemLine));
+          }
+          i++;
+        }
+        data[key] = arr;
+        continue;
+      }
+
+      data[key] = cleanYamlValue(val);
+    }
+    i++;
+  }
+
+  return { data, body };
+}
+
+function cleanYamlValue(val) {
+  if (val === 'true')  return true;
+  if (val === 'false') return false;
+  if (val === 'null' || val === '~' || val === '') return null;
+  // remover aspas
+  if ((val.startsWith('"') && val.endsWith('"')) ||
+      (val.startsWith("'") && val.endsWith("'"))) {
+    return val.slice(1, -1);
+  }
+  // número
+  if (/^-?\d+(\.\d+)?$/.test(val)) return Number(val);
+  return val;
+}
+
+// ════════════════════════════════════════════
+//   BUSCAR PASTA DO GITHUB
 // ════════════════════════════════════════════
 async function fetchFolder(folder) {
   try {
-    const res = await fetch(`${GH_API}/${folder}`, {
-      headers: { 'Accept': 'application/vnd.github.v3+json' }
-    });
+    const res = await fetch(`${GH_API}/${folder}`);
     if (!res.ok) return [];
     const files = await res.json();
-    // filtrar só JSONs
-    const jsonFiles = files.filter(f => f.name.endsWith('.json') && f.type === 'file');
+
+    // aceitar .md e .json
+    const mdFiles = files.filter(f => (f.name.endsWith('.md') || f.name.endsWith('.json')) && f.type === 'file');
+
     const items = await Promise.all(
-      jsonFiles.map(f =>
-        fetch(f.download_url)
-          .then(r => r.json())
-          .then(data => ({ ...data, slug: f.name.replace('.json', '') }))
-          .catch(() => null)
-      )
+      mdFiles.map(async f => {
+        try {
+          const r = await fetch(f.download_url);
+          const text = await r.text();
+          let data;
+
+          if (f.name.endsWith('.json')) {
+            data = JSON.parse(text);
+          } else {
+            // .md com frontmatter
+            const parsed = parseFrontmatter(text);
+            data = parsed.data;
+            if (parsed.body) data.body = parsed.body;
+          }
+
+          data.slug = f.name.replace(/\.(md|json)$/, '');
+          return data;
+        } catch { return null; }
+      })
     );
+
     return items.filter(Boolean);
-  } catch {
-    return [];
+  } catch { return []; }
+}
+
+// ════════════════════════════════════════════
+//   IMAGENS — normaliza qualquer formato do CMS
+// ════════════════════════════════════════════
+function normalizeImages(raw) {
+  if (!raw) return [];
+  if (typeof raw === 'string') return raw ? [raw] : [];
+  if (Array.isArray(raw)) {
+    return raw.map(item => {
+      if (typeof item === 'string') return item;
+      if (item && typeof item === 'object') {
+        return item.image || item.src || item.url || Object.values(item)[0] || '';
+      }
+      return '';
+    }).filter(Boolean);
   }
+  return [];
 }
 
 // ════════════════════════════════════════════
@@ -79,15 +195,9 @@ let prodState = { cat:'todos', page:1, data:[] };
 
 function initProdutos() {
   const grid = document.getElementById('produtos-grid');
-
-  // Skeleton enquanto carrega
-  grid.innerHTML = `
-    <div style="grid-column:1/-1;text-align:center;padding:60px 0;font-family:var(--f-serif);font-style:italic;color:var(--terra-mid);font-size:1.1rem">
-      Carregando peças…
-    </div>`;
+  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 0;font-family:var(--f-serif);font-style:italic;color:var(--terra-mid);font-size:1.1rem">Carregando peças…</div>`;
 
   fetchFolder('_products').then(data => {
-    // Ordenar: featured primeiro, depois por data desc
     data.sort((a, b) => {
       if (a.featured && !b.featured) return -1;
       if (!a.featured && b.featured) return 1;
@@ -121,7 +231,6 @@ function renderProdutos() {
   const slice = lista.slice((prodState.page - 1) * PER_PAGE, prodState.page * PER_PAGE);
 
   grid.innerHTML = '';
-
   if (!slice.length) {
     grid.innerHTML = `<p style="font-family:var(--f-serif);font-style:italic;color:var(--terra-mid);grid-column:1/-1;text-align:center;padding:60px 0;font-size:1.1rem">Nenhuma peça nesta categoria ainda.</p>`;
     if (paginacao) paginacao.innerHTML = '';
@@ -132,21 +241,17 @@ function renderProdutos() {
     const card = document.createElement('div');
     card.className = 'produto-card reveal';
     card.style.transitionDelay = `${i * 0.07}s`;
-
-    // O CMS salva imagens como array de strings com o caminho
     const imgs = normalizeImages(p.images);
     const hasImg = imgs.length > 0;
 
     card.innerHTML = `
       <div class="produto-img">
-        ${hasImg
-          ? `<img src="${imgs[0]}" alt="${p.title}" loading="lazy">`
-          : `<span class="produto-img-placeholder">🎨</span>`}
-        <span class="produto-tag">${CAT_LABELS[p.category] || p.category}</span>
+        ${hasImg ? `<img src="${imgs[0]}" alt="${p.title || ''}" loading="lazy">` : `<span class="produto-img-placeholder">🎨</span>`}
+        <span class="produto-tag">${CAT_LABELS[p.category] || p.category || ''}</span>
         ${p.available === false ? `<div class="produto-sold">Esgotado</div>` : ''}
       </div>
       <div class="produto-info">
-        <h3 class="produto-nome">${p.title}</h3>
+        <h3 class="produto-nome">${p.title || ''}</h3>
         <p class="produto-desc">${p.description || ''}</p>
         <div class="produto-foot">
           <span class="produto-preco">${p.price || ''}</span>
@@ -154,12 +259,10 @@ function renderProdutos() {
         </div>
       </div>`;
 
-    // Passa imagens normalizadas pro modal
     card.addEventListener('click', () => abrirModal({ ...p, _imgs: imgs }));
     grid.appendChild(card);
   });
 
-  // Paginação
   if (paginacao) {
     paginacao.innerHTML = '';
     if (totalPags > 1) {
@@ -176,24 +279,7 @@ function renderProdutos() {
       }
     }
   }
-
   reObserve(grid);
-}
-
-// O Decap CMS pode salvar imagens de formas diferentes — normaliza tudo pra array de strings
-function normalizeImages(raw) {
-  if (!raw) return [];
-  if (typeof raw === 'string') return raw ? [raw] : [];
-  if (Array.isArray(raw)) {
-    return raw
-      .map(item => {
-        if (typeof item === 'string') return item;
-        if (item && typeof item === 'object') return item.image || item.src || item.url || '';
-        return '';
-      })
-      .filter(Boolean);
-  }
-  return [];
 }
 
 // ════════════════════════════════════════════
@@ -216,17 +302,17 @@ function abrirModal(p) {
   modalCurrent = p;
   modalImgIdx = 0;
 
-  document.getElementById('modal-cat').textContent  = CAT_LABELS[p.category] || p.category || '';
-  document.getElementById('modal-nome').textContent = p.title || '';
-  document.getElementById('modal-desc').textContent = p.description || '';
+  document.getElementById('modal-cat').textContent     = CAT_LABELS[p.category] || p.category || '';
+  document.getElementById('modal-nome').textContent    = p.title || '';
+  document.getElementById('modal-desc').textContent    = p.description || '';
   document.getElementById('modal-tecnica').textContent = p.technique || '—';
   document.getElementById('modal-tamanho').textContent = p.size || '—';
-  document.getElementById('modal-preco').textContent = p.price || '';
+  document.getElementById('modal-preco').textContent   = p.price || '';
 
   renderModalGallery(p);
 
   const msg = encodeURIComponent(`Olá, Helena! Vi sua peça "${p.title}" no site e gostaria de mais informações 🌸`);
-  const wppEl = document.getElementById('modal-wpp');
+  const wppEl     = document.getElementById('modal-wpp');
   const unavailEl = document.getElementById('modal-unavail');
   if (wppEl) {
     if (p.available !== false) {
@@ -244,12 +330,12 @@ function abrirModal(p) {
 }
 
 function renderModalGallery(p) {
-  const mainArea  = document.getElementById('modal-main-img');
+  const mainArea   = document.getElementById('modal-main-img');
   const thumbsArea = document.getElementById('modal-thumbs');
   const imgs = p._imgs || normalizeImages(p.images);
 
   if (imgs.length > 0) {
-    mainArea.innerHTML = `<img src="${imgs[modalImgIdx]}" alt="${p.title}">`;
+    mainArea.innerHTML = `<img src="${imgs[modalImgIdx]}" alt="${p.title || ''}">`;
     thumbsArea.style.display = imgs.length > 1 ? 'flex' : 'none';
     thumbsArea.innerHTML = imgs.map((img, i) =>
       `<div class="modal-thumb ${i === modalImgIdx ? 'active' : ''}" data-i="${i}">
@@ -257,10 +343,7 @@ function renderModalGallery(p) {
        </div>`
     ).join('');
     thumbsArea.querySelectorAll('.modal-thumb').forEach(t => {
-      t.addEventListener('click', () => {
-        modalImgIdx = +t.dataset.i;
-        renderModalGallery(p);
-      });
+      t.addEventListener('click', () => { modalImgIdx = +t.dataset.i; renderModalGallery(p); });
     });
   } else {
     mainArea.innerHTML = `<span class="no-img">🎨</span>`;
@@ -283,16 +366,11 @@ const CAT_POST = { tecnicas:'Técnicas', inspiracoes:'Inspirações', bastidores
 function initBlog() {
   const grid = document.getElementById('blog-grid');
   if (!grid) return;
-
-  grid.innerHTML = `
-    <div style="grid-column:1/-1;text-align:center;padding:60px 0;font-family:var(--f-serif);font-style:italic;color:var(--terra-mid);font-size:1.1rem">
-      Carregando posts…
-    </div>`;
+  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 0;font-family:var(--f-serif);font-style:italic;color:var(--terra-mid);font-size:1.1rem">Carregando posts…</div>`;
 
   fetchFolder('_posts').then(posts => {
-    // Ordenar por data desc
     posts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-    if (posts.length === 0) {
+    if (!posts.length) {
       grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;padding:60px 0;font-family:var(--f-serif);font-style:italic;color:var(--terra-mid);font-size:1.1rem">Nenhum post publicado ainda.</p>`;
       return;
     }
@@ -311,13 +389,11 @@ function renderBlogGrid(posts, grid) {
       : '';
     card.innerHTML = `
       <div class="post-cover">
-        ${post.cover
-          ? `<img src="${post.cover}" alt="${post.title}">`
-          : '✦'}
+        ${post.cover ? `<img src="${post.cover}" alt="${post.title || ''}">` : '✦'}
       </div>
       <div class="post-body">
         <p class="post-cat">${CAT_POST[post.category] || post.category || ''}</p>
-        <h3 class="post-title">${post.title}</h3>
+        <h3 class="post-title">${post.title || ''}</h3>
         <p class="post-excerpt">${post.excerpt || ''}</p>
         <div class="post-foot">
           <span class="post-date">${dateStr}</span>
@@ -339,21 +415,22 @@ function abrirPost(post) {
     ? new Date(post.date).toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' })
     : '';
 
-  // body pode vir como markdown ou html do CMS
-  const bodyHtml = post.body
-    ? post.body.replace(/\n\n/g, '</p><p>').replace(/^/, '<p>').replace(/$/, '</p>')
-    : `<p>${post.excerpt || ''}</p>`;
+  // body vem como markdown — converter quebras de parágrafo básicas
+  const bodyHtml = (post.body || post.excerpt || '')
+    .split(/\n\n+/)
+    .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+    .join('');
 
   singleView.innerHTML = `
     <div class="post-single">
       <button onclick="fecharPost()" class="btn btn-outline" style="margin-bottom:32px">← Voltar ao blog</button>
       <div class="post-single-cover">
         ${post.cover
-          ? `<img src="${post.cover}" alt="${post.title}">`
+          ? `<img src="${post.cover}" alt="${post.title || ''}">`
           : `<div style="width:100%;height:100%;background:var(--grad-subtle);display:flex;align-items:center;justify-content:center;font-size:5rem">✦</div>`}
       </div>
       <p class="post-cat">${CAT_POST[post.category] || post.category || ''}</p>
-      <h1>${post.title}</h1>
+      <h1>${post.title || ''}</h1>
       <p class="post-meta">${dateStr}</p>
       <div class="post-content">${bodyHtml}</div>
     </div>`;
@@ -364,9 +441,7 @@ function abrirPost(post) {
 }
 
 function fecharPost() {
-  const listView   = document.getElementById('blog-list-view');
-  const singleView = document.getElementById('post-single-view');
-  if (listView)   listView.style.display = '';
-  if (singleView) singleView.style.display = 'none';
+  document.getElementById('blog-list-view').style.display = '';
+  document.getElementById('post-single-view').style.display = 'none';
   document.getElementById('blog')?.scrollIntoView({ behavior: 'smooth' });
 }
