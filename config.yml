@@ -1,0 +1,67 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+locale: pt
+
+collections:
+  - name: "products"
+    label: "Peças"
+    label_singular: "Peça"
+    folder: "_products"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nome da Peça", name: "title", widget: "string" }
+      - label: "Categoria"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "Lenços", value: "lencos" }
+          - { label: "Bolsas", value: "bolsas" }
+          - { label: "Vestuário", value: "vestuario" }
+          - { label: "Mesa", value: "mesa" }
+          - { label: "Casa", value: "casa" }
+          - { label: "Outros", value: "outros" }
+      - { label: "Preço (ex: R$ 120,00)", name: "price", widget: "string" }
+      - { label: "Técnica usada", name: "technique", widget: "string", required: false }
+      - { label: "Tamanho / Medidas", name: "size", widget: "string", required: false }
+      - { label: "Disponível para venda", name: "available", widget: "boolean", default: true }
+      - { label: "Destaque na página inicial", name: "featured", widget: "boolean", default: false }
+      - { label: "Descrição", name: "description", widget: "text" }
+      - label: "Fotos da Peça"
+        name: "images"
+        widget: "list"
+        label_singular: "Foto"
+        min: 1
+        field:
+          label: "Foto"
+          name: "image"
+          widget: "image"
+      - { label: "Data de cadastro", name: "date", widget: "datetime", default: "" }
+
+  - name: "posts"
+    label: "Blog"
+    label_singular: "Post"
+    folder: "_posts"
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Resumo (aparece na listagem)", name: "excerpt", widget: "text" }
+      - { label: "Foto de capa", name: "cover", widget: "image" }
+      - label: "Categoria"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "Técnicas", value: "tecnicas" }
+          - { label: "Inspirações", value: "inspiracoes" }
+          - { label: "Bastidores", value: "bastidores" }
+          - { label: "Presentes", value: "presentes" }
+      - { label: "Conteúdo", name: "body", widget: "markdown" }
+      - { label: "Data", name: "date", widget: "datetime" }

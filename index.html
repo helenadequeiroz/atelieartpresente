@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ateliê Art Presente — Helena de Queiroz</title>
+  <meta name="description" content="Arte têxtil pintada à mão por Helena de Queiroz. Peças únicas em tecido com alma — lenços, bolsas, vestuário, decoração.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <style>
+    /* ═══════════════════════════════════════
+       HERO — tela cheia, aquarela, editorial
+    ═══════════════════════════════════════ */
+    .hero {
+      min-height: 100svh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+
+    /* ── gradiente aquarela rico, diagonal ── */
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 0% 0%,   #E8A89C 0%, transparent 55%),
+        radial-gradient(ellipse 60% 70% at 100% 0%,  #C9A84C55 0%, transparent 50%),
+        radial-gradient(ellipse 70% 60% at 100% 100%, #8EAD8666 0%, transparent 55%),
+        radial-gradient(ellipse 50% 50% at 0% 100%,  #D4897A44 0%, transparent 50%),
+        radial-gradient(ellipse 90% 90% at 50% 50%,  #F0DFA8 0%, #EDD5CE 40%, #C8DACC 100%);
+    }
+
+    /* ── camada de brilho central ── */
+    .hero-glow {
+      position: absolute; inset: 0; z-index: 1;
+      background: radial-gradient(ellipse 55% 55% at 50% 45%, rgba(253,250,246,.45) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── noise texture pra dar profundidade ── */
+    .hero-noise {
+      position: absolute; inset: 0; z-index: 2;
+      opacity: .045;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* ── letra decorativa gigante ao fundo ── */
+    .hero-letter {
+      position: absolute; z-index: 2;
+      font-family: var(--f-serif);
+      font-size: clamp(28rem, 55vw, 68rem);
+      line-height: 1;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(61,43,31,.055);
+      right: -4vw;
+      bottom: -6vw;
+      user-select: none;
+      pointer-events: none;
+      letter-spacing: -.05em;
+    }
+
+    /* ── linha decorativa ── */
+    .hero-rule-v {
+      position: absolute; z-index: 2;
+      top: 15%; bottom: 15%;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(212,137,122,.3) 30%, rgba(142,173,134,.25) 70%, transparent);
+      pointer-events: none;
+    }
+
+    /* ── conteúdo principal ── */
+    .hero-content {
+      position: relative; z-index: 3;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: flex-end;
+      gap: 0;
+      padding: 0 80px 88px;
+      width: 100%;
+    }
+
+    /* coluna esquerda */
+    .hero-col-left {
+      padding-right: 56px;
+    }
+    .hero-pretitle {
+      font-size: .6rem;
+      letter-spacing: .48em;
+      text-transform: uppercase;
+      color: var(--terra-mid);
+      font-weight: 300;
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px;
+      opacity: 0;
+      animation: fadeUp .7s .15s var(--ease-out) forwards;
+    }
+    .hero-pretitle::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--rosa); flex-shrink: 0;
+    }
+    .hero-name {
+      font-family: var(--f-serif);
+      font-size: clamp(4.8rem, 8.5vw, 9rem);
+      line-height: .86;
+      font-weight: 300;
+      color: var(--terra);
+      letter-spacing: -.025em;
+      opacity: 0;
+      animation: fadeUp .9s .3s var(--ease-out) forwards;
+    }
+    .hero-name em {
+      display: block;
+      font-style: italic;
+      font-size: .68em;
+      color: var(--terra-mid);
+      margin-top: 8px;
+      letter-spacing: -.01em;
+    }
+    .hero-tagline {
+      font-family: var(--f-serif);
+      font-size: clamp(.95rem, 1.4vw, 1.15rem);
+      line-height: 1.85;
+      font-weight: 300;
+      color: var(--terra-mid);
+      max-width: 360px;
+      margin-top: 32px;
+      opacity: 0;
+      animation: fadeUp .7s .5s var(--ease-out) forwards;
+    }
+    .hero-ctas {
+      display: flex; gap: 12px; margin-top: 44px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .7s .65s var(--ease-out) forwards;
+    }
+
+    /* coluna direita */
+    .hero-col-right {
+      padding-left: 56px;
+      display: flex; flex-direction: column;
+      align-items: flex-start;
+      gap: 32px;
+      opacity: 0;
+      animation: fadeIn 1s .5s forwards;
+    }
+    .hero-author {
+      font-size: .6rem; letter-spacing: .36em;
+      text-transform: uppercase;
+      color: var(--terra-mid);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .hero-author::before {
+      content: ''; width: 16px; height: 1px;
+      background: var(--rosa); flex-shrink: 0;
+    }
+    .hero-quote {
+      font-family: var(--f-serif);
+      font-size: clamp(1.1rem, 1.9vw, 1.45rem);
+      font-style: italic; font-weight: 300;
+      color: var(--terra);
+      line-height: 1.7;
+      max-width: 320px;
+      padding-left: 20px;
+      border-left: 2px solid var(--rosa);
+    }
+    .hero-stats {
+      display: flex; gap: 0;
+      border: 1px solid rgba(61,43,31,.13);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .hero-stat {
+      padding: 16px 24px;
+      display: flex; flex-direction: column; gap: 3px;
+      background: rgba(253,250,246,.45);
+      backdrop-filter: blur(16px);
+    }
+    .hero-stat + .hero-stat {
+      border-left: 1px solid rgba(61,43,31,.1);
+    }
+    .hero-stat .sn {
+      font-family: var(--f-serif);
+      font-size: 1.8rem; font-weight: 300;
+      color: var(--terra); line-height: 1;
+    }
+    .hero-stat .sl {
+      font-size: .55rem; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--terra-mid);
+    }
+
+    /* scroll hint */
+    .hero-scroll {
+      position: absolute; bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      opacity: 0; animation: fadeIn 1s 1.3s forwards;
+    }
+    .hero-scroll span {
+      font-size: .54rem; letter-spacing: .32em;
+      text-transform: uppercase; color: var(--terra-mid);
+    }
+    .hero-scroll-line {
+      width: 1px; height: 44px;
+      background: linear-gradient(to bottom, var(--rosa), transparent);
+      animation: scrollAnim 2.2s ease-in-out infinite;
+    }
+    @keyframes scrollAnim {
+      0%,100%{opacity:.4;transform:scaleY(1)}
+      50%{opacity:1;transform:scaleY(1.35)}
+    }
+
+    /* ═══════════════════════════════════════
+       SOBRE
+    ═══════════════════════════════════════ */
+    .sobre-section {
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 42% 1fr;
+      min-height: 540px;
+      padding: 0;
+    }
+    .sobre-visual {
+      position: relative; overflow: hidden;
+    }
+    .sobre-visual img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
+      filter: saturate(.88) brightness(1.02);
+      transition: transform .8s var(--ease-out), filter .5s;
+    }
+    .sobre-visual:hover img {
+      transform: scale(1.04);
+      filter: saturate(.97) brightness(1.04);
+    }
+    .sobre-visual::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(160deg, rgba(237,213,206,.2) 0%, transparent 45%, rgba(200,218,204,.15) 100%);
+      pointer-events: none;
+    }
+    .sobre-visual::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 2;
+      background: linear-gradient(to right, transparent 58%, var(--white) 100%);
+      pointer-events: none;
+    }
+    .sobre-foto-badge {
+      position: absolute; bottom: 28px; left: 24px; z-index: 4;
+      background: rgba(28,18,16,.8);
+      backdrop-filter: blur(10px);
+      color: var(--cream);
+      padding: 12px 18px; border-radius: 10px; text-align: center;
+    }
+    .sobre-foto-badge .n {
+      font-family: var(--f-serif); font-size: 1.6rem; font-weight: 300;
+      line-height: 1; color: var(--mel-pale);
+    }
+    .sobre-foto-badge .l {
+      font-size: .5rem; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(253,250,246,.45); margin-top: 2px;
+    }
+    .sobre-text {
+      padding: 64px 72px 64px 48px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .sobre-text .s-label { margin-bottom: 10px; }
+    .sobre-text .s-title { margin-bottom: 22px; }
+    .sobre-text p {
+      font-family: var(--f-serif); font-size: 1.05rem; line-height: 1.85;
+      color: var(--terra-mid); font-weight: 300; margin-bottom: 16px;
+    }
+    .sobre-text p strong { color: var(--terra); font-weight: 400; }
+    .sobre-pull {
+      font-family: var(--f-serif); font-size: 1.2rem; font-style: italic;
+      color: var(--terra); border-left: 2px solid var(--rosa);
+      padding-left: 18px; margin: 18px 0 28px; line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVO
+    ═══════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .hero-content { grid-template-columns: 1fr; padding: 0 40px 72px; }
+      .hero-col-left { padding-right: 0; }
+      .hero-col-right { padding-left: 0; }
+      .hero-quote { max-width: 100%; }
+      .hero-rule-v { display: none; }
+      .sobre-section { grid-template-columns: 36% 1fr; min-height: 460px; }
+      .sobre-text { padding: 48px 40px; }
+    }
+    @media (max-width: 640px) {
+      .hero-content { padding: 0 24px 64px; }
+      .hero-ctas { flex-direction: column; align-items: flex-start; }
+      .hero-letter { font-size: 22rem; }
+      .sobre-section { grid-template-columns: 1fr; min-height: unset; }
+      .sobre-visual { height: 320px; }
+      .sobre-visual::after {
+        background: linear-gradient(to bottom, transparent 55%, var(--white) 100%);
+      }
+      .sobre-text { padding: 36px 24px 52px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- MODAL PRODUTO -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-gallery">
+      <div class="modal-main-img" id="modal-main-img">
+        <span class="no-img">🎨</span>
+      </div>
+      <div class="modal-thumbs" id="modal-thumbs"></div>
+    </div>
+    <div class="modal-info">
+      <button class="modal-close" id="modal-close">✕</button>
+      <p class="modal-cat" id="modal-cat"></p>
+      <h2 class="modal-nome" id="modal-nome"></h2>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-meta">
+        <div class="modal-meta-item">
+          <span class="modal-meta-label">Técnica</span>
+          <span class="modal-meta-val" id="modal-tecnica">—</span>
+        </div>
+        <div class="modal-meta-item">
+          <span class="modal-meta-label">Tamanho</span>
+          <span class="modal-meta-val" id="modal-tamanho">—</span>
+        </div>
+      </div>
+      <p class="modal-preco" id="modal-preco"></p>
+      <p class="modal-unavail" id="modal-unavail" style="display:none;font-size:.85rem;color:var(--terra-mid);font-style:italic;margin-bottom:20px">Esta peça está esgotada. Entre em contato para encomendar uma igual.</p>
+      <a href="#" class="btn btn-wpp" id="modal-wpp" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Encomendar no WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">Ateliê Art Presente</a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#produtos">Peças</a></li>
+    <li><a href="#blog">Blog</a></li>
+    <li><a href="#contato">Contato</a></li>
+    <li>
+      <a href="https://wa.me/5515997193422?text=Olá%2C+Helena!+Vi+seu+ateliê+e+quero+conhecer+mais+%F0%9F%8C%B8" class="nav-cta" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Fale comigo
+      </a>
+    </li>
+  </ul>
+  <button class="nav-burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="nav-mobile">
+  <a href="#sobre">Sobre</a>
+  <a href="#produtos">Peças</a>
+  <a href="#blog">Blog</a>
+  <a href="#contato">Contato</a>
+  <a href="https://wa.me/5515997193422" target="_blank" style="color:var(--rosa)">WhatsApp</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+
+  <!-- camadas de fundo -->
+  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-letter">A</div>
+  <div class="hero-rule-v"></div>
+
+  <!-- conteúdo -->
+  <div class="hero-content">
+
+    <div class="hero-col-left">
+      <p class="hero-pretitle">Arte Têxtil Autoral · Feita à Mão</p>
+      <h1 class="hero-name">
+        Ateliê<br>
+        <em>Art Presente</em>
+      </h1>
+      <p class="hero-tagline">
+        Cada peça carrega a energia de quem a recebe —
+        pintada à mão, nascida de uma conversa,
+        de um sentimento, de um ato de amor.
+      </p>
+      <div class="hero-ctas">
+        <a href="#produtos" class="btn btn-dark">Ver as peças</a>
+        <a href="sobre.html" class="btn btn-outline">A história</a>
+      </div>
+    </div>
+
+    <div class="hero-col-right">
+      <p class="hero-author">Helena de Queiroz</p>
+      <blockquote class="hero-quote">
+        "Eu precisava da arte presente na minha vida pra me sentir viva."
+      </blockquote>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="sn">+30</span>
+          <span class="sl">anos criando</span>
+        </div>
+        <div class="hero-stat">
+          <span class="sn">∞</span>
+          <span class="sl">peças únicas</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-scroll">
+    <span>Descer</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+
+</section>
+
+<!-- ══ SOBRE ══ -->
+<div class="sobre-section" id="sobre">
+
+  <div class="sobre-visual">
+    <img src="images/helena.jpg" alt="Helena de Queiroz — Ateliê Art Presente">
+    <div class="sobre-foto-badge">
+      <div class="n">+30</div>
+      <div class="l">anos criando</div>
+    </div>
+  </div>
+
+  <!-- Texto -->
+  <div class="sobre-text">
+    <p class="s-label reveal">A artista</p>
+    <h2 class="s-title reveal">Uma vida inteira<br><em>aprendendo<br>a presentear</em></h2>
+    <p class="reveal reveal-d1">
+      Com 9 anos, Helena já sabia que <strong>o melhor presente é feito à mão</strong>. Um coelho de cartolina recheado de ovos de Páscoa foi o começo — sem dinheiro, mas com toda a criatividade do mundo.
+    </p>
+    <p class="reveal reveal-d2">
+      Professora, advogada, artesã — Helena percorreu muitos caminhos antes de entender que a arte não era passatempo: era <strong>o que fazia sua vida ter sentido</strong>.
+    </p>
+    <blockquote class="sobre-pull reveal reveal-d3">
+      "O que não estava presente na minha vida era a arte — e eu precisava dela pra me sentir viva."
+    </blockquote>
+    <div class="reveal">
+      <a href="sobre.html" class="btn btn-outline">Ler a história completa →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MANIFESTO ══ -->
+<section class="manifesto">
+  <p class="s-label reveal">O que move o ateliê</p>
+  <h2 class="s-title reveal">Mais do que<br><em>uma peça bonita</em></h2>
+  <blockquote class="reveal">
+    "Aquele prazer que eu tenho na criação, a alegria que tenho em criar —
+    <strong>essa alegria vai junto com a peça</strong>,
+    e a pessoa recebe isso. De alguma forma, o meu trabalho
+    faz diferença na vida das pessoas."
+  </blockquote>
+  <div class="valores">
+    <div class="valor reveal">
+      <div class="valor-icon">🎁</div>
+      <h3>A arte do presente</h3>
+      <p>Cada peça nasce como um gesto de amor. Criar com as mãos sempre foi a forma de Helena dizer "eu me importo com você".</p>
+    </div>
+    <div class="valor reveal reveal-d1">
+      <div class="valor-icon">✦</div>
+      <h3>Único e irrepetível</h3>
+      <p>Nenhuma peça igual à outra. A tinta, o tecido e a intenção se encontram uma única vez — e o resultado é só seu.</p>
+    </div>
+    <div class="valor reveal reveal-d2">
+      <div class="valor-icon">🌊</div>
+      <h3>Energia presente</h3>
+      <p>A inspiração vem de quem vai usar — conversa, sentimento, memória. A peça já nasce pertencendo a alguém.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PRODUTOS ══ -->
+<section class="produtos" id="produtos">
+  <div class="produtos-header">
+    <div>
+      <p class="s-label">Cada peça, uma história</p>
+      <h2 class="s-title">As <em>peças</em></h2>
+    </div>
+    <div class="filtros">
+      <button class="filtro active" data-cat="todos">Todos</button>
+      <button class="filtro" data-cat="lencos">Lenços</button>
+      <button class="filtro" data-cat="bolsas">Bolsas</button>
+      <button class="filtro" data-cat="vestuario">Vestuário</button>
+      <button class="filtro" data-cat="mesa">Mesa</button>
+      <button class="filtro" data-cat="casa">Casa</button>
+    </div>
+  </div>
+  <div class="grid-produtos" id="produtos-grid"></div>
+  <div class="paginacao" id="paginacao"></div>
+</section>
+
+<!-- ══ TÉCNICAS ══ -->
+<section class="tecnicas" id="tecnicas">
+  <p class="s-label reveal">O universo criativo</p>
+  <h2 class="s-title reveal">Técnicas que<br><em>se encontram</em></h2>
+  <p class="s-lead reveal">"Uma técnica indiana se junta com uma japonesa e se forma uma coisa linda e encantadora. O mundo se encontra no tecido."</p>
+  <div class="tecnicas-grid">
+    <div class="tecnica reveal">
+      <div class="tecnica-n">01</div>
+      <h3>Pintura em Tecido</h3>
+      <p>A primeira técnica que Helena aprendeu, aos 9 anos. Tinta e tecido se conheceram e nunca mais se separaram.</p>
+    </div>
+    <div class="tecnica reveal reveal-d1">
+      <div class="tecnica-n">02</div>
+      <h3>Shibori</h3>
+      <p>Arte japonesa de dobraduras e amarrações. Você dobra, pinta — e só descobre o que criou quando abre. Magia pura.</p>
+    </div>
+    <div class="tecnica reveal reveal-d2">
+      <div class="tecnica-n">03</div>
+      <h3>Marmorização</h3>
+      <p>Tinta flutuando em água. O tecido mergulha e absorve um cosmos. Hipnótico, orgânico, irrepetível.</p>
+    </div>
+    <div class="tecnica reveal">
+      <div class="tecnica-n">04</div>
+      <h3>Carimbos Autorais</h3>
+      <p>Helena faz seus próprios carimbos. Nenhum igual ao de ninguém — o carimbo é extensão da mão e da intenção.</p>
+    </div>
+    <div class="tecnica reveal reveal-d1">
+      <div class="tecnica-n">05</div>
+      <h3>Batik & Tie-dye</h3>
+      <p>Resistência com cera ou amarrações. O improvável vira padrão. A surpresa é parte essencial da técnica.</p>
+    </div>
+    <div class="tecnica reveal reveal-d2">
+      <div class="tecnica-n">06</div>
+      <h3>Tintas Naturais</h3>
+      <p>Pigmentos preparados pela própria Helena. A cor viva de verdade — respeitando o tecido e quem vai usar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BLOG ══ -->
+<section class="blog-section" id="blog">
+  <div id="blog-list-view">
+    <p class="s-label reveal">Bastidores e inspirações</p>
+    <h2 class="s-title reveal">O <em>blog</em></h2>
+    <p class="s-lead reveal">Histórias por trás de cada peça, técnicas, processos e tudo que inspira o ateliê.</p>
+    <div class="blog-grid" id="blog-grid"></div>
+  </div>
+  <div id="post-single-view"></div>
+</section>
+
+<!-- ══ CONTATO ══ -->
+<section class="contato" id="contato">
+  <p class="s-label reveal">Vamos conversar</p>
+  <h2 class="s-title reveal">Peça sua<br><em>peça única</em></h2>
+  <p class="s-lead reveal" style="margin:0 auto;text-align:center;max-width:480px">
+    Cada peça começa numa conversa. Me conta o que você sente, quem vai receber — e a arte aparece.
+  </p>
+  <div class="contato-cards">
+    <a href="https://wa.me/5515997193422?text=Oi%2C+Helena!+Vi+seu+ateliê+e+quero+pedir+uma+peça+%F0%9F%8C%B8" class="contato-card reveal" target="_blank" rel="noopener">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span class="contato-card-label">WhatsApp</span>
+      <span class="contato-card-val">(15) 99719-3422</span>
+    </a>
+    <a href="https://instagram.com/atelieartpresente" class="contato-card reveal reveal-d1" target="_blank" rel="noopener">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      <span class="contato-card-label">Instagram</span>
+      <span class="contato-card-val">@atelieartpresente</span>
+    </a>
+    <div class="contato-card reveal reveal-d2" style="cursor:default">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      <span class="contato-card-label">Localização</span>
+      <span class="contato-card-val" style="text-align:center;font-size:.95rem">Brasil<br><small style="font-size:.75rem;opacity:.7">Entregas para todo o país</small></span>
+    </div>
+  </div>
+  <p class="contato-note reveal">Peças sob encomenda · Embalagem especial para presente · Enviamos para todo o Brasil</p>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-logo">Ateliê Art Presente</div>
+  <p class="footer-copy">© <span id="ano"></span> Helena de Queiroz · Todos os direitos reservados</p>
+  <div class="footer-links">
+    <a href="sobre.html">Sobre</a>
+    <a href="https://wa.me/5515997193422" target="_blank">WhatsApp</a>
+    <a href="https://instagram.com/atelieartpresente" target="_blank">Instagram</a>
+    <a href="/admin" style="opacity:.25">Painel</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  document.getElementById('ano').textContent = new Date().getFullYear();
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => { document.location.href = "/admin/"; });
+      }
+    });
+  }
+</script>
+</body>
+</html>

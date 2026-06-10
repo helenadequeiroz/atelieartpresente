@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A História — Ateliê Art Presente</title>
+  <meta name="description" content="A história de Helena de Queiroz: da infância que inventava presentes até o ateliê que nasceu da necessidade de se sentir viva.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    /* Estilos extras para a página sobre */
+    .sobre-intro {
+      background: var(--white);
+      padding: 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .sobre-intro p {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      line-height: 1.9;
+      color: var(--terra-light);
+      margin-bottom: 24px;
+      font-weight: 300;
+    }
+    .sobre-intro p strong { color: var(--terra); font-weight: 400; }
+    .sobre-intro .lead {
+      font-size: 1.5rem;
+      color: var(--terra);
+      font-style: italic;
+    }
+
+    .sobre-full {
+      background: var(--white);
+    }
+
+    .inspiracao-section {
+      background: var(--ivory);
+      padding: 100px 80px;
+    }
+    .inspiracao-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      max-width: 1000px;
+      margin: 60px auto 0;
+      align-items: start;
+    }
+    .inspiracao-card {
+      position: relative;
+    }
+    .inspiracao-card-accent {
+      position: absolute;
+      top: -12px; left: -12px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      opacity: 0.2;
+    }
+    .inspiracao-card-accent.rosa { background: var(--rosa); }
+    .inspiracao-card-accent.mel  { background: var(--mel); }
+    .inspiracao-card-accent.sage { background: var(--sage); }
+    .inspiracao-titulo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--terra);
+      margin-bottom: 16px;
+      position: relative; z-index: 1;
+    }
+    .inspiracao-titulo em { font-style: italic; color: var(--terra-light); }
+    .inspiracao-texto {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--terra-light);
+      font-weight: 300;
+    }
+    .inspiracao-texto strong { color: var(--terra); font-weight: 400; }
+
+    .processo-section {
+      background: var(--terra);
+      padding: 100px 80px;
+      color: var(--cream);
+    }
+    .processo-section .section-title { color: var(--cream); }
+    .processo-section .section-eyebrow { color: var(--mel-light); }
+    .processo-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      margin-top: 60px;
+      max-width: 1000px;
+    }
+    .processo-step { }
+    .processo-num {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      color: rgba(250,246,238,0.1);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .processo-titulo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--mel-light);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    .processo-texto {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      line-height: 1.8;
+      color: rgba(250,246,238,0.6);
+      font-weight: 300;
+    }
+
+    .citacoes-section {
+      background: var(--cream);
+      padding: 100px 80px;
+    }
+    .citacoes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 30px;
+      margin-top: 50px;
+    }
+    .citacao-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 36px 30px;
+      border: 1px solid rgba(90,62,43,0.06);
+      position: relative;
+    }
+    .citacao-card::before {
+      content: '"';
+      font-family: var(--font-display);
+      font-size: 6rem;
+      color: var(--rosa);
+      opacity: 0.25;
+      position: absolute;
+      top: -10px; left: 20px;
+      line-height: 1;
+    }
+    .citacao-texto {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: var(--terra);
+      line-height: 1.7;
+      font-style: italic;
+      font-weight: 300;
+      position: relative;
+      z-index: 1;
+    }
+    .citacao-texto strong { font-style: normal; font-weight: 400; color: var(--rosa-deep); }
+
+    @media (max-width: 900px) {
+      .sobre-intro { padding: 50px 24px; }
+      .inspiracao-grid { grid-template-columns: 1fr; gap: 40px; }
+      .processo-steps { grid-template-columns: 1fr 1fr; }
+      .citacoes-grid { grid-template-columns: 1fr; }
+      .inspiracao-section { padding: 70px 24px; }
+      .processo-section { padding: 70px 24px; }
+      .citacoes-section { padding: 70px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor"></div>
+<div class="cursor-follower"></div>
+
+<!-- NAVEGAÇÃO -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">Ateliê Art Presente</a>
+  <ul class="nav-links">
+    <li><a href="index.html#sobre">Sobre</a></li>
+    <li><a href="index.html#produtos">Peças</a></li>
+    <li><a href="index.html#tecnicas">Técnicas</a></li>
+    <li><a href="index.html#contato">Contato</a></li>
+    <li>
+      <a href="https://wa.me/5515997193422" class="nav-whatsapp" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Fale comigo
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- HERO SOBRE -->
+<div class="sobre-hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="sobre-hero-text">
+    <p style="font-family:var(--font-body);font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--terra-light);margin-bottom:16px;opacity:0;animation:fadeUp 0.8s 0.3s forwards">A história por trás de cada peça</p>
+    <h1 class="sobre-page-title" style="opacity:0;animation:fadeUp 0.9s 0.5s forwards">
+      Helena<br><em>de Queiroz</em>
+    </h1>
+    <p style="font-family:var(--font-display);font-size:1.3rem;color:var(--terra-light);margin-top:20px;font-style:italic;font-weight:300;max-width:500px;opacity:0;animation:fadeUp 0.9s 0.7s forwards">
+      Artista têxtil, autodidada e eterna aprendiz —<br>que descobriu cedo o poder de criar com as mãos.
+    </p>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="sobre-full">
+  <div class="sobre-intro">
+    <p class="lead reveal">
+      Havia uma criança de 9 anos que, na Páscoa, não tinha dinheiro para comprar presente. Então ela construiu um.
+    </p>
+    <p class="reveal">
+      Um coelho de cartolina — não qualquer coelho, mas um em <strong>silhueta de perfil</strong>, com uma abertura nas costas para encher de ovos. Barrigudo, original, feito com as próprias mãos. Essa criança era Helena de Queiroz, e esse coelho foi o começo de tudo.
+    </p>
+    <p class="reveal">
+      Crescendo numa família de <strong>poucos recursos financeiros</strong>, Helena aprendeu desde cedo que o presente mais especial é aquele que não tem preço porque tem valor. Com 12 anos fazia bolos para os aniversários dos colegas, entregando como presente sua habilidade em vez de dinheiro. Com 13, a avó ensinou os primeiros pontos de crochê — e Helena nunca mais parou de criar.
+    </p>
+    <p class="reveal">
+      Com 14, na primeira festa de 15 anos da amiga Patrícia, Helena inventou algo que hoje é comum mas naquela época ninguém via: <strong>uma capa de caderneta em cartonagem</strong>, forrada com as sobras do tecido de listrinhas rosas do vestido que a mãe fizera para ela. Patrícia adorou — porque era algo que não estava à venda em lugar nenhum. Só ela tinha.
+    </p>
+    <p class="reveal">
+      <em>Essa é a essência do Ateliê Art Presente: criar o que não existe em lugar nenhum, só para você.</em>
+    </p>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div style="background:var(--white);padding:20px 0 80px">
+  <div style="text-align:center;padding:0 40px 60px">
+    <p class="section-eyebrow reveal">Uma vida em criação</p>
+    <h2 class="section-title reveal">A jornada</h2>
+  </div>
+  <div class="sobre-timeline">
+    <div class="timeline-item">
+      <div class="tl-content">
+        <div class="tl-age">09</div>
+        <h3 class="tl-title">O primeiro presente</h3>
+        <p class="tl-text">Um coelho de Páscoa em cartolina, recheado de ovos. A primeira descoberta: criar com as mãos é uma forma de amar. Nessa mesma época, aprende a pintar tecido com a mãe.</p>
+      </div>
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-empty"></div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-empty"></div>
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-content">
+        <div class="tl-age">12</div>
+        <h3 class="tl-title">O bolo como presente</h3>
+        <p class="tl-text">Aprende a fazer bolo com a avó — a mesma que logo ensinaria crochê. Os bolos de aniversário dos colegas se tornam seu presente, porque é o que tem a dar: talento e amor.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-content">
+        <div class="tl-age">13</div>
+        <h3 class="tl-title">O crochê da avó</h3>
+        <p class="tl-text">Os primeiros pontos passados de mãos para mãos. Helena vira "fábrica de presentes" — a mãe pedia toalhinhas de crochê para presentear vizinhas, e Helena fazia. Sem saber, já era artesã.</p>
+      </div>
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-empty"></div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-empty"></div>
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-content">
+        <div class="tl-age">14</div>
+        <h3 class="tl-title">A capa que só Patrícia tinha</h3>
+        <p class="tl-text">Para o primeiro 15 anos da amiga, inventa uma capa de caderneta em cartonagem com tecido da mãe. A amiga amou porque era único — e essa lição ficou para sempre: o feito à mão não tem igual.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-content">
+        <div class="tl-age">Adulta</div>
+        <h3 class="tl-title">Os outros caminhos</h3>
+        <p class="tl-text">Professora. Faculdade de Direito. A arte foi ficando para trás, sufocada pelos estudos e pela vida. Mas havia um vazio. "Eu nem mesma sabia do que era", lembra. A arte fazia falta sem que ela soubesse.</p>
+      </div>
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-empty"></div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-empty"></div>
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-content">
+        <div class="tl-age">Hoje</div>
+        <h3 class="tl-title">A arte presente</h3>
+        <p class="tl-text">O ateliê nasce do entendimento profundo: não era hobby, não era passatempo. Era o que fazia a vida ter sentido. "Eu precisava da arte presente na minha vida pra me sentir viva." E assim nasceu o Ateliê Art Presente.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GRANDE FRASE -->
+<div class="grande-frase">
+  <blockquote class="reveal">
+    "Aquele prazer que eu tenho na criação, a alegria que tenho em criar —
+    <strong>essa alegria vai junto com a peça</strong>,
+    e a pessoa recebe isso. O meu trabalho faz diferença
+    na vida das pessoas."
+    <cite>— Helena de Queiroz</cite>
+  </blockquote>
+</div>
+
+<!-- INSPIRAÇÕES -->
+<section class="inspiracao-section">
+  <p class="section-eyebrow reveal">De onde vem a arte</p>
+  <h2 class="section-title reveal">As fontes da<br><em>inspiração</em></h2>
+  <div class="inspiracao-grid">
+    <div class="inspiracao-card reveal">
+      <div class="inspiracao-card-accent rosa"></div>
+      <h3 class="inspiracao-titulo">A energia de <em>quem vai usar</em></h3>
+      <p class="inspiracao-texto">
+        Não é a informação cognitiva que move Helena. Quando uma amiga contou que amava a planta Amor Agarradinho, o que chegou até Helena foi <strong>o sentimento</strong> — o desejo da amiga pela planta, a emoção na voz. Foi esse sentimento que foi para o tecido, em forma de mandala cor de rosa sobre fundo verde. Cada peça começa em quem vai recebê-la.
+      </p>
+    </div>
+    <div class="inspiracao-card reveal reveal-delay-1">
+      <div class="inspiracao-card-accent mel"></div>
+      <h3 class="inspiracao-titulo">A troca de <em>energia</em></h3>
+      <p class="inspiracao-texto">
+        Em uma ocasião, foi pedido um trabalho na energia do sol. Helena montou uma playlist de frequências solares, se conectou com aquilo, e pintou. O resultado foi um varal de lenços que, quando exibidos pela primeira vez em público, <strong>fizeram pessoas voltarem dias depois procurando as peças</strong> que tinham visto. A energia estava no tecido.
+      </p>
+    </div>
+    <div class="inspiracao-card reveal">
+      <div class="inspiracao-card-accent sage"></div>
+      <h3 class="inspiracao-titulo">A surpresa do <em>processo</em></h3>
+      <p class="inspiracao-texto">
+        Helena ama o que não se controla completamente. Com o Shibori — técnica japonesa de dobraduras e amarrações — você dobra o tecido, pinta, e só descobre o que criou quando abre. É uma magia. <strong>"Delicioso: você pega um pano grande, dobra pequeninho, pinta e quando abre é um desenho lindo maravilhoso."</strong>
+      </p>
+    </div>
+    <div class="inspiracao-card reveal reveal-delay-1">
+      <div class="inspiracao-card-accent rosa"></div>
+      <h3 class="inspiracao-titulo">O encontro das <em>culturas</em></h3>
+      <p class="inspiracao-texto">
+        Uma técnica indiana que se junta com uma japonesa. O carimbo que nenhum outro artista tem — porque Helena faz os seus próprios. A marmorização europeia encontrando o batik asiático. Helena acredita que <strong>"o mundo se encontra no tecido"</strong> — e em cada peça, há sempre um diálogo entre tradições, culturas e momentos.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section class="processo-section">
+  <p class="section-eyebrow reveal">Do sentimento à peça</p>
+  <h2 class="section-title reveal">Como nasce<br><em>cada criação</em></h2>
+  <div class="processo-steps">
+    <div class="processo-step reveal">
+      <div class="processo-num">01</div>
+      <p class="processo-titulo">A conversa</p>
+      <p class="processo-texto">Tudo começa no encontro. Uma palavra, um sentimento compartilhado, uma energia percebida. A peça já existe antes do primeiro traço.</p>
+    </div>
+    <div class="processo-step reveal reveal-delay-1">
+      <div class="processo-num">02</div>
+      <p class="processo-titulo">A escolha do tecido</p>
+      <p class="processo-texto">O tecido não é suporte — é parceiro. Cada fibra responde diferente à tinta. Helena prepara as próprias tintas, conhece cada reação.</p>
+    </div>
+    <div class="processo-step reveal reveal-delay-2">
+      <div class="processo-num">03</div>
+      <p class="processo-titulo">A criação intuitiva</p>
+      <p class="processo-texto">Ela lê a receita duas, três vezes — e depois inventa outra. A técnica é ponto de partida, não destino. O resultado sempre surpreende.</p>
+    </div>
+    <div class="processo-step reveal reveal-delay-3">
+      <div class="processo-num">04</div>
+      <p class="processo-titulo">A entrega</p>
+      <p class="processo-texto">A peça chega com a alegria de quem a fez. E isso, de alguma forma, a pessoa que recebe sente — em como usa, em como sorri, em como cuida.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CITAÇÕES -->
+<section class="citacoes-section">
+  <p class="section-eyebrow reveal">Nas próprias palavras</p>
+  <h2 class="section-title reveal">Helena<br><em>fala</em></h2>
+  <div class="citacoes-grid">
+    <div class="citacao-card reveal">
+      <p class="citacao-texto">"A inspiração não foi a informação cognitiva. Ela é o que eu percebi do <strong>sentimento</strong>. O que chegou pra mim foi um amor — e era isso que eu queria transmitir."</p>
+    </div>
+    <div class="citacao-card reveal reveal-delay-1">
+      <p class="citacao-texto">"Eu sou aquela que lê a receita de bolo, coloca de lado, vai pra cozinha e faz <strong>outra coisa</strong>. E assim é com a arte e o design têxtil."</p>
+    </div>
+    <div class="citacao-card reveal reveal-delay-2">
+      <p class="citacao-texto">"Uma técnica indiana se junta com uma japonesa e se forma uma coisa <strong>linda e encantadora</strong>. O mundo se encontra no tecido."</p>
+    </div>
+    <div class="citacao-card reveal">
+      <p class="citacao-texto">"Eu sabia que tava faltando algo na minha vida, mas nem eu mesma sabia o quê. O que não estava presente era <strong>a arte</strong>."</p>
+    </div>
+    <div class="citacao-card reveal reveal-delay-1">
+      <p class="citacao-texto">"Aquela alegria que tenho em criar vai <strong>junto com a peça</strong>, e a pessoa recebe isso. De alguma forma, meu trabalho faz diferença."</p>
+    </div>
+    <div class="citacao-card reveal reveal-delay-2">
+      <p class="citacao-texto">"Desde criança, quando queria dar um presente, <strong>eu construía</strong>. Nunca foi sobre ter dinheiro — sempre foi sobre ter amor."</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="contato-section" id="contato">
+  <div class="contato-inner">
+    <p class="section-eyebrow reveal">Agora que você me conhece</p>
+    <h2 class="section-title reveal">Vamos criar algo<br><em>só seu?</em></h2>
+    <p style="font-family:var(--font-display);font-size:1.15rem;color:var(--terra-light);margin:20px 0 40px;line-height:1.8;font-weight:300;font-style:italic" class="reveal">
+      Me conta uma história, um sentimento, uma pessoa que você quer presentear.<br>A arte começa aí.
+    </p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap" class="reveal">
+      <a href="https://wa.me/5515997193422?text=Oi+Helena!+Conheci+sua+história+e+quero+pedir+uma+peça+especial+%F0%9F%8C%B8" class="btn-primary" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Conversar com a Helena
+      </a>
+      <a href="index.html#produtos" class="btn-outline">Ver as peças</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Ateliê Art Presente</div>
+  <p class="footer-copy">© <span id="ano"></span> Helena de Queiroz · Todos os direitos reservados</p>
+  <div class="footer-social">
+    <a href="https://wa.me/5515997193422" target="_blank">WhatsApp</a>
+    <a href="https://instagram.com/artpresente" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
