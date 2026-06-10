@@ -5,414 +5,580 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A História — Ateliê Art Presente</title>
   <meta name="description" content="A história de Helena de Queiroz: da infância que inventava presentes até o ateliê que nasceu da necessidade de se sentir viva.">
-  <link rel="stylesheet" href="css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
   <style>
-    /* Estilos extras para a página sobre */
-    .sobre-intro {
+
+    /* ══ HERO DA PÁGINA SOBRE ══ */
+    .sobre-hero {
+      min-height: 70vh;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      padding: 0 80px 80px;
+    }
+    .sobre-hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 0% 0%,   #E8A89C 0%, transparent 55%),
+        radial-gradient(ellipse 50% 60% at 100% 30%, #C9A84C44 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 60% 100%, #8EAD8655 0%, transparent 55%),
+        radial-gradient(ellipse 90% 90% at 50% 50%,  #F0DFA8 0%, #EDD5CE 45%, #C8DACC 100%);
+    }
+    .sobre-hero-noise {
+      position: absolute; inset: 0; z-index: 1; opacity: .04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .sobre-hero-letter {
+      position: absolute; z-index: 1;
+      font-family: var(--f-serif);
+      font-size: clamp(20rem, 40vw, 52rem);
+      line-height: 1; font-weight: 300; font-style: italic;
+      color: rgba(61,43,31,.05);
+      right: -2vw; bottom: -4vw;
+      user-select: none; pointer-events: none;
+    }
+    .sobre-hero-content {
+      position: relative; z-index: 2;
+    }
+    .sobre-hero-eyebrow {
+      font-size: .62rem; letter-spacing: .44em; text-transform: uppercase;
+      color: var(--terra-mid); font-weight: 300; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+      opacity: 0; animation: fadeUp .7s .2s var(--ease-out) forwards;
+    }
+    .sobre-hero-eyebrow::before {
+      content: ''; width: 24px; height: 1px; background: var(--rosa); flex-shrink: 0;
+    }
+    .sobre-hero-title {
+      font-family: var(--f-serif);
+      font-size: clamp(4rem, 8vw, 7.5rem);
+      line-height: .88; font-weight: 300; color: var(--terra);
+      letter-spacing: -.02em;
+      opacity: 0; animation: fadeUp .9s .35s var(--ease-out) forwards;
+    }
+    .sobre-hero-title em {
+      display: block; font-style: italic;
+      color: var(--terra-mid); font-size: .72em; margin-top: 6px;
+    }
+    .sobre-hero-sub {
+      font-family: var(--f-serif);
+      font-size: clamp(1rem, 1.8vw, 1.25rem);
+      font-style: italic; font-weight: 300; color: var(--terra-mid);
+      max-width: 480px; margin-top: 24px; line-height: 1.7;
+      opacity: 0; animation: fadeUp .7s .55s var(--ease-out) forwards;
+    }
+
+    /* ══ INTRO ══ */
+    .intro-section {
       background: var(--white);
-      padding: 80px;
-      max-width: 1000px;
+      padding: 100px 80px;
+      max-width: 100%;
+    }
+    .intro-inner {
+      max-width: 760px;
       margin: 0 auto;
     }
-    .sobre-intro p {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      line-height: 1.9;
-      color: var(--terra-light);
-      margin-bottom: 24px;
-      font-weight: 300;
+    .intro-lead {
+      font-family: var(--f-serif);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-style: italic; font-weight: 300;
+      color: var(--terra); line-height: 1.55;
+      margin-bottom: 40px;
     }
-    .sobre-intro p strong { color: var(--terra); font-weight: 400; }
-    .sobre-intro .lead {
-      font-size: 1.5rem;
-      color: var(--terra);
-      font-style: italic;
+    .intro-inner p {
+      font-family: var(--f-serif);
+      font-size: 1.1rem; line-height: 1.9;
+      color: var(--terra-mid); font-weight: 300;
+      margin-bottom: 22px;
     }
+    .intro-inner p strong { color: var(--terra); font-weight: 400; }
+    .intro-inner p em { font-style: italic; color: var(--terra); }
 
-    .sobre-full {
-      background: var(--white);
-    }
-
-    .inspiracao-section {
+    /* ══ TIMELINE ══ */
+    .timeline-section {
       background: var(--ivory);
       padding: 100px 80px;
     }
-    .inspiracao-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      max-width: 1000px;
-      margin: 60px auto 0;
-      align-items: start;
-    }
-    .inspiracao-card {
+    .timeline-header { text-align: center; margin-bottom: 80px; }
+    .timeline-wrap {
+      max-width: 760px; margin: 0 auto;
       position: relative;
     }
-    .inspiracao-card-accent {
-      position: absolute;
-      top: -12px; left: -12px;
-      width: 60px; height: 60px;
-      border-radius: 50%;
-      opacity: 0.2;
+    .timeline-wrap::before {
+      content: '';
+      position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom,
+        transparent,
+        var(--rosa-pale) 15%,
+        var(--mel-pale) 50%,
+        var(--sage-pale) 85%,
+        transparent);
+      transform: translateX(-50%);
     }
-    .inspiracao-card-accent.rosa { background: var(--rosa); }
-    .inspiracao-card-accent.mel  { background: var(--mel); }
-    .inspiracao-card-accent.sage { background: var(--sage); }
-    .inspiracao-titulo {
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      color: var(--terra);
-      margin-bottom: 16px;
-      position: relative; z-index: 1;
+    .tl-item {
+      display: grid;
+      grid-template-columns: 1fr 48px 1fr;
+      gap: 0;
+      margin-bottom: 56px;
+      align-items: start;
     }
-    .inspiracao-titulo em { font-style: italic; color: var(--terra-light); }
-    .inspiracao-texto {
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-      line-height: 1.85;
-      color: var(--terra-light);
-      font-weight: 300;
+    .tl-item:nth-child(odd)  .tl-body { grid-column: 1; text-align: right; padding-right: 36px; }
+    .tl-item:nth-child(odd)  .tl-pin  { grid-column: 2; }
+    .tl-item:nth-child(odd)  .tl-void { grid-column: 3; }
+    .tl-item:nth-child(even) .tl-void { grid-column: 1; }
+    .tl-item:nth-child(even) .tl-pin  { grid-column: 2; }
+    .tl-item:nth-child(even) .tl-body { grid-column: 3; text-align: left; padding-left: 36px; }
+    .tl-pin {
+      display: flex; justify-content: center; padding-top: 6px;
     }
-    .inspiracao-texto strong { color: var(--terra); font-weight: 400; }
+    .tl-pin-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--white); border: 2.5px solid var(--rosa);
+      transition: transform .3s;
+    }
+    .tl-item:nth-child(2) .tl-pin-dot { border-color: var(--mel); }
+    .tl-item:nth-child(3) .tl-pin-dot { border-color: var(--sage); }
+    .tl-item:nth-child(4) .tl-pin-dot { border-color: var(--rosa); }
+    .tl-item:nth-child(5) .tl-pin-dot { border-color: var(--mel); }
+    .tl-item:nth-child(6) .tl-pin-dot { border-color: var(--sage); }
+    .tl-age {
+      font-family: var(--f-serif);
+      font-size: 3rem; font-weight: 300;
+      color: rgba(61,43,31,.1); line-height: 1;
+      margin-bottom: 4px;
+    }
+    .tl-title {
+      font-family: var(--f-serif);
+      font-size: 1.2rem; font-weight: 400; color: var(--terra);
+      margin-bottom: 10px;
+    }
+    .tl-text {
+      font-family: var(--f-serif);
+      font-size: .95rem; font-weight: 300;
+      color: var(--terra-mid); line-height: 1.8;
+    }
 
-    .processo-section {
+    /* ══ GRANDE FRASE ══ */
+    .frase-section {
       background: var(--terra);
       padding: 100px 80px;
-      color: var(--cream);
+      text-align: center;
+      position: relative; overflow: hidden;
     }
-    .processo-section .section-title { color: var(--cream); }
-    .processo-section .section-eyebrow { color: var(--mel-light); }
-    .processo-steps {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 40px;
-      margin-top: 60px;
-      max-width: 1000px;
+    .frase-section::before {
+      content: '"';
+      font-family: var(--f-serif);
+      font-size: 40vw; line-height: .7;
+      font-weight: 300; color: rgba(253,250,246,.03);
+      position: absolute; top: -5%; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
     }
-    .processo-step { }
-    .processo-num {
-      font-family: var(--font-display);
-      font-size: 4rem;
-      color: rgba(250,246,238,0.1);
-      line-height: 1;
-      margin-bottom: 12px;
+    .frase-section blockquote {
+      font-family: var(--f-serif);
+      font-size: clamp(1.3rem, 2.8vw, 2.1rem);
+      font-style: italic; font-weight: 300;
+      color: rgba(253,250,246,.82);
+      line-height: 1.7; max-width: 760px; margin: 0 auto 28px;
+      position: relative; z-index: 1;
     }
-    .processo-titulo {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      color: var(--mel-light);
-      margin-bottom: 10px;
-      font-style: italic;
-    }
-    .processo-texto {
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      letter-spacing: 0.04em;
-      line-height: 1.8;
-      color: rgba(250,246,238,0.6);
-      font-weight: 300;
+    .frase-section blockquote strong { color: var(--mel-pale); font-style: normal; font-weight: 400; }
+    .frase-section cite {
+      font-family: var(--f-sans);
+      font-size: .62rem; letter-spacing: .3em; text-transform: uppercase;
+      color: rgba(253,250,246,.35); font-style: normal;
+      position: relative; z-index: 1;
     }
 
-    .citacoes-section {
+    /* ══ INSPIRAÇÕES ══ */
+    .insp-section {
       background: var(--cream);
+      padding: 100px 80px;
+    }
+    .insp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px; margin-top: 56px;
+    }
+    .insp-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 40px 36px;
+      border: 1px solid rgba(61,43,31,.06);
+      position: relative; overflow: hidden;
+      transition: transform .35s var(--ease-out), box-shadow .35s;
+    }
+    .insp-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .insp-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--grad);
+    }
+    .insp-card h3 {
+      font-family: var(--f-serif);
+      font-size: 1.4rem; font-weight: 400; color: var(--terra);
+      margin-bottom: 14px; line-height: 1.25;
+    }
+    .insp-card h3 em { font-style: italic; color: var(--terra-mid); }
+    .insp-card p {
+      font-family: var(--f-serif);
+      font-size: 1rem; font-weight: 300;
+      color: var(--terra-mid); line-height: 1.85;
+    }
+    .insp-card p strong { color: var(--terra); font-weight: 400; }
+
+    /* ══ PROCESSO ══ */
+    .processo-section {
+      background: var(--dark);
+      padding: 100px 80px;
+    }
+    .processo-section .s-label { color: var(--mel-pale); }
+    .processo-section .s-title { color: var(--cream); }
+    .processo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0; margin-top: 64px;
+    }
+    .processo-step {
+      padding: 0 32px 0 0;
+      border-right: 1px solid rgba(253,250,246,.07);
+    }
+    .processo-step:last-child { border-right: none; padding-right: 0; }
+    .processo-step:not(:first-child) { padding-left: 32px; }
+    .processo-n {
+      font-family: var(--f-serif);
+      font-size: 4rem; font-weight: 300;
+      color: rgba(253,250,246,.07); line-height: 1; margin-bottom: 16px;
+    }
+    .processo-titulo {
+      font-family: var(--f-serif);
+      font-size: 1.15rem; font-style: italic;
+      color: var(--mel-pale); margin-bottom: 12px;
+    }
+    .processo-texto {
+      font-size: .78rem; letter-spacing: .03em;
+      line-height: 1.8; color: rgba(253,250,246,.45);
+    }
+
+    /* ══ CITAÇÕES ══ */
+    .citacoes-section {
+      background: var(--white);
       padding: 100px 80px;
     }
     .citacoes-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 30px;
-      margin-top: 50px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px; margin-top: 52px;
     }
-    .citacao-card {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 36px 30px;
-      border: 1px solid rgba(90,62,43,0.06);
+    .citacao {
+      background: var(--ivory);
+      border-radius: 16px; padding: 36px 28px;
       position: relative;
+      border: 1px solid rgba(61,43,31,.05);
     }
-    .citacao-card::before {
+    .citacao::before {
       content: '"';
-      font-family: var(--font-display);
-      font-size: 6rem;
-      color: var(--rosa);
-      opacity: 0.25;
-      position: absolute;
-      top: -10px; left: 20px;
-      line-height: 1;
+      font-family: var(--f-serif);
+      font-size: 5rem; font-weight: 300;
+      color: var(--rosa); opacity: .22;
+      position: absolute; top: -8px; left: 18px;
+      line-height: 1; pointer-events: none;
     }
-    .citacao-texto {
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-      color: var(--terra);
-      line-height: 1.7;
-      font-style: italic;
-      font-weight: 300;
-      position: relative;
-      z-index: 1;
+    .citacao p {
+      font-family: var(--f-serif);
+      font-size: 1rem; font-style: italic;
+      font-weight: 300; color: var(--terra);
+      line-height: 1.75; position: relative; z-index: 1;
     }
-    .citacao-texto strong { font-style: normal; font-weight: 400; color: var(--rosa-deep); }
+    .citacao p strong { font-style: normal; font-weight: 400; color: var(--rosa); }
 
-    @media (max-width: 900px) {
-      .sobre-intro { padding: 50px 24px; }
-      .inspiracao-grid { grid-template-columns: 1fr; gap: 40px; }
-      .processo-steps { grid-template-columns: 1fr 1fr; }
+    /* ══ CTA FINAL ══ */
+    .cta-section {
+      background: var(--grad);
+      padding: 100px 80px; text-align: center;
+    }
+    .cta-section .s-lead {
+      margin: 16px auto 48px;
+      text-align: center;
+    }
+    .cta-btns {
+      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    }
+
+    /* ══ RESPONSIVO ══ */
+    @media (max-width: 1024px) {
+      .sobre-hero { padding: 0 40px 64px; }
+      .intro-section, .timeline-section, .insp-section,
+      .processo-section, .citacoes-section, .cta-section { padding: 80px 40px; }
+      .processo-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .processo-step { border-right: none; padding: 0; }
+      .processo-step:not(:first-child) { padding-left: 0; }
+    }
+    @media (max-width: 768px) {
+      .sobre-hero { padding: 0 24px 56px; min-height: 60vh; }
+      .intro-section, .timeline-section, .insp-section,
+      .processo-section, .citacoes-section, .cta-section,
+      .frase-section { padding: 70px 24px; }
+      .insp-grid { grid-template-columns: 1fr; }
       .citacoes-grid { grid-template-columns: 1fr; }
-      .inspiracao-section { padding: 70px 24px; }
-      .processo-section { padding: 70px 24px; }
-      .citacoes-section { padding: 70px 24px; }
+      .processo-grid { grid-template-columns: 1fr; }
+      .timeline-wrap::before { left: 20px; transform: none; }
+      .tl-item { grid-template-columns: 40px 1fr; }
+      .tl-item:nth-child(odd) .tl-body,
+      .tl-item:nth-child(even) .tl-body {
+        grid-column: 2; text-align: left;
+        padding-left: 20px; padding-right: 0;
+      }
+      .tl-item:nth-child(odd) .tl-pin,
+      .tl-item:nth-child(even) .tl-pin { grid-column: 1; }
+      .tl-item:nth-child(odd) .tl-void,
+      .tl-item:nth-child(even) .tl-void { display: none; }
     }
   </style>
 </head>
 <body>
 
-<div class="cursor"></div>
-<div class="cursor-follower"></div>
-
-<!-- NAVEGAÇÃO -->
+<!-- NAV -->
 <nav id="navbar">
   <a href="index.html" class="nav-logo">Ateliê Art Presente</a>
   <ul class="nav-links">
     <li><a href="index.html#sobre">Sobre</a></li>
     <li><a href="index.html#produtos">Peças</a></li>
-    <li><a href="index.html#tecnicas">Técnicas</a></li>
+    <li><a href="index.html#blog">Blog</a></li>
     <li><a href="index.html#contato">Contato</a></li>
     <li>
-      <a href="https://wa.me/5515997193422" class="nav-whatsapp" target="_blank" rel="noopener">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <a href="https://wa.me/5515997193422?text=Oi+Helena!" class="nav-cta" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         Fale comigo
       </a>
     </li>
   </ul>
+  <button class="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
+<div class="nav-mobile">
+  <a href="index.html#sobre">Sobre</a>
+  <a href="index.html#produtos">Peças</a>
+  <a href="index.html#blog">Blog</a>
+  <a href="index.html#contato">Contato</a>
+  <a href="https://wa.me/5515997193422" target="_blank" style="color:var(--rosa)">WhatsApp</a>
+</div>
 
-<!-- HERO SOBRE -->
+<!-- ══ HERO ══ -->
 <div class="sobre-hero">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
-  <div class="sobre-hero-text">
-    <p style="font-family:var(--font-body);font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--terra-light);margin-bottom:16px;opacity:0;animation:fadeUp 0.8s 0.3s forwards">A história por trás de cada peça</p>
-    <h1 class="sobre-page-title" style="opacity:0;animation:fadeUp 0.9s 0.5s forwards">
-      Helena<br><em>de Queiroz</em>
-    </h1>
-    <p style="font-family:var(--font-display);font-size:1.3rem;color:var(--terra-light);margin-top:20px;font-style:italic;font-weight:300;max-width:500px;opacity:0;animation:fadeUp 0.9s 0.7s forwards">
-      Artista têxtil, autodidada e eterna aprendiz —<br>que descobriu cedo o poder de criar com as mãos.
-    </p>
+  <div class="sobre-hero-bg"></div>
+  <div class="sobre-hero-noise"></div>
+  <div class="sobre-hero-letter">H</div>
+  <div class="sobre-hero-content">
+    <p class="sobre-hero-eyebrow">A história por trás de cada peça</p>
+    <h1 class="sobre-hero-title">Helena<br><em>de Queiroz</em></h1>
+    <p class="sobre-hero-sub">Artista têxtil, autodidata e eterna aprendiz — que descobriu cedo o poder de criar com as mãos.</p>
   </div>
 </div>
 
-<!-- INTRO -->
-<div class="sobre-full">
-  <div class="sobre-intro">
-    <p class="lead reveal">
+<!-- ══ INTRO ══ -->
+<section class="intro-section">
+  <div class="intro-inner">
+    <p class="intro-lead reveal">
       Havia uma criança de 9 anos que, na Páscoa, não tinha dinheiro para comprar presente. Então ela construiu um.
     </p>
     <p class="reveal">
       Um coelho de cartolina — não qualquer coelho, mas um em <strong>silhueta de perfil</strong>, com uma abertura nas costas para encher de ovos. Barrigudo, original, feito com as próprias mãos. Essa criança era Helena de Queiroz, e esse coelho foi o começo de tudo.
     </p>
     <p class="reveal">
-      Crescendo numa família de <strong>poucos recursos financeiros</strong>, Helena aprendeu desde cedo que o presente mais especial é aquele que não tem preço porque tem valor. Com 12 anos fazia bolos para os aniversários dos colegas, entregando como presente sua habilidade em vez de dinheiro. Com 13, a avó ensinou os primeiros pontos de crochê — e Helena nunca mais parou de criar.
+      Crescendo numa família de <strong>poucos recursos financeiros</strong>, Helena aprendeu desde cedo que o presente mais especial é aquele que não tem preço porque tem valor. Com 12 anos fazia bolos para os aniversários dos colegas. Com 13, a avó ensinou os primeiros pontos de crochê — e Helena nunca mais parou de criar.
     </p>
     <p class="reveal">
-      Com 14, na primeira festa de 15 anos da amiga Patrícia, Helena inventou algo que hoje é comum mas naquela época ninguém via: <strong>uma capa de caderneta em cartonagem</strong>, forrada com as sobras do tecido de listrinhas rosas do vestido que a mãe fizera para ela. Patrícia adorou — porque era algo que não estava à venda em lugar nenhum. Só ela tinha.
+      Com 14, na primeira festa de 15 anos da amiga Patrícia, inventou algo que hoje é comum mas naquela época ninguém via: <strong>uma capa de caderneta em cartonagem</strong>, forrada com as sobras do tecido de listrinhas rosas do vestido que a mãe fizera para ela. Patrícia adorou — porque era algo que não estava à venda em lugar nenhum. Só ela tinha.
     </p>
-    <p class="reveal">
-      <em>Essa é a essência do Ateliê Art Presente: criar o que não existe em lugar nenhum, só para você.</em>
-    </p>
+    <p class="reveal"><em>Essa é a essência do Ateliê Art Presente: criar o que não existe em lugar nenhum, só para você.</em></p>
   </div>
-</div>
+</section>
 
-<!-- TIMELINE -->
-<div style="background:var(--white);padding:20px 0 80px">
-  <div style="text-align:center;padding:0 40px 60px">
-    <p class="section-eyebrow reveal">Uma vida em criação</p>
-    <h2 class="section-title reveal">A jornada</h2>
+<!-- ══ TIMELINE ══ -->
+<section class="timeline-section">
+  <div class="timeline-header">
+    <p class="s-label reveal">Uma vida em criação</p>
+    <h2 class="s-title reveal">A <em>jornada</em></h2>
   </div>
-  <div class="sobre-timeline">
-    <div class="timeline-item">
-      <div class="tl-content">
+  <div class="timeline-wrap">
+
+    <div class="tl-item">
+      <div class="tl-body reveal">
         <div class="tl-age">09</div>
         <h3 class="tl-title">O primeiro presente</h3>
         <p class="tl-text">Um coelho de Páscoa em cartolina, recheado de ovos. A primeira descoberta: criar com as mãos é uma forma de amar. Nessa mesma época, aprende a pintar tecido com a mãe.</p>
       </div>
-      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-      <div class="tl-empty"></div>
+      <div class="tl-pin"><div class="tl-pin-dot"></div></div>
+      <div class="tl-void"></div>
     </div>
-    <div class="timeline-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-      <div class="tl-content">
+
+    <div class="tl-item">
+      <div class="tl-void"></div>
+      <div class="tl-pin"><div class="tl-pin-dot"></div></div>
+      <div class="tl-body reveal">
         <div class="tl-age">12</div>
         <h3 class="tl-title">O bolo como presente</h3>
-        <p class="tl-text">Aprende a fazer bolo com a avó — a mesma que logo ensinaria crochê. Os bolos de aniversário dos colegas se tornam seu presente, porque é o que tem a dar: talento e amor.</p>
+        <p class="tl-text">Aprende a fazer bolo com a avó — a mesma que logo ensinaria crochê. Os bolos de aniversário dos colegas se tornam seu presente: talento e amor no lugar de dinheiro.</p>
       </div>
     </div>
-    <div class="timeline-item">
-      <div class="tl-content">
+
+    <div class="tl-item">
+      <div class="tl-body reveal">
         <div class="tl-age">13</div>
         <h3 class="tl-title">O crochê da avó</h3>
-        <p class="tl-text">Os primeiros pontos passados de mãos para mãos. Helena vira "fábrica de presentes" — a mãe pedia toalhinhas de crochê para presentear vizinhas, e Helena fazia. Sem saber, já era artesã.</p>
+        <p class="tl-text">Os primeiros pontos passados de mãos para mãos. Helena vira "fábrica de presentes" — a mãe pedia toalhinhas para presentear vizinhas, e Helena fazia. Sem saber, já era artesã.</p>
       </div>
-      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-      <div class="tl-empty"></div>
+      <div class="tl-pin"><div class="tl-pin-dot"></div></div>
+      <div class="tl-void"></div>
     </div>
-    <div class="timeline-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-      <div class="tl-content">
+
+    <div class="tl-item">
+      <div class="tl-void"></div>
+      <div class="tl-pin"><div class="tl-pin-dot"></div></div>
+      <div class="tl-body reveal">
         <div class="tl-age">14</div>
         <h3 class="tl-title">A capa que só Patrícia tinha</h3>
-        <p class="tl-text">Para o primeiro 15 anos da amiga, inventa uma capa de caderneta em cartonagem com tecido da mãe. A amiga amou porque era único — e essa lição ficou para sempre: o feito à mão não tem igual.</p>
+        <p class="tl-text">Para o primeiro 15 anos da amiga, inventa uma capa de caderneta em cartonagem. A amiga amou porque era único — e essa lição ficou para sempre: o feito à mão não tem igual.</p>
       </div>
     </div>
-    <div class="timeline-item">
-      <div class="tl-content">
+
+    <div class="tl-item">
+      <div class="tl-body reveal">
         <div class="tl-age">Adulta</div>
         <h3 class="tl-title">Os outros caminhos</h3>
-        <p class="tl-text">Professora. Faculdade de Direito. A arte foi ficando para trás, sufocada pelos estudos e pela vida. Mas havia um vazio. "Eu nem mesma sabia do que era", lembra. A arte fazia falta sem que ela soubesse.</p>
+        <p class="tl-text">Professora. Faculdade de Direito. A arte foi ficando para trás. Mas havia um vazio. "Eu nem mesma sabia do que era", lembra. A arte fazia falta sem que ela soubesse.</p>
       </div>
-      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-      <div class="tl-empty"></div>
+      <div class="tl-pin"><div class="tl-pin-dot"></div></div>
+      <div class="tl-void"></div>
     </div>
-    <div class="timeline-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-      <div class="tl-content">
+
+    <div class="tl-item">
+      <div class="tl-void"></div>
+      <div class="tl-pin"><div class="tl-pin-dot"></div></div>
+      <div class="tl-body reveal">
         <div class="tl-age">Hoje</div>
         <h3 class="tl-title">A arte presente</h3>
-        <p class="tl-text">O ateliê nasce do entendimento profundo: não era hobby, não era passatempo. Era o que fazia a vida ter sentido. "Eu precisava da arte presente na minha vida pra me sentir viva." E assim nasceu o Ateliê Art Presente.</p>
+        <p class="tl-text">O ateliê nasce do entendimento profundo: não era hobby, não era passatempo. Era o que fazia a vida ter sentido. "Eu precisava da arte presente na minha vida pra me sentir viva."</p>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- GRANDE FRASE -->
-<div class="grande-frase">
+  </div>
+</section>
+
+<!-- ══ GRANDE FRASE ══ -->
+<section class="frase-section">
   <blockquote class="reveal">
     "Aquele prazer que eu tenho na criação, a alegria que tenho em criar —
     <strong>essa alegria vai junto com a peça</strong>,
-    e a pessoa recebe isso. O meu trabalho faz diferença
-    na vida das pessoas."
-    <cite>— Helena de Queiroz</cite>
+    e a pessoa recebe isso. O meu trabalho faz diferença na vida das pessoas."
   </blockquote>
-</div>
+  <cite>— Helena de Queiroz</cite>
+</section>
 
-<!-- INSPIRAÇÕES -->
-<section class="inspiracao-section">
-  <p class="section-eyebrow reveal">De onde vem a arte</p>
-  <h2 class="section-title reveal">As fontes da<br><em>inspiração</em></h2>
-  <div class="inspiracao-grid">
-    <div class="inspiracao-card reveal">
-      <div class="inspiracao-card-accent rosa"></div>
-      <h3 class="inspiracao-titulo">A energia de <em>quem vai usar</em></h3>
-      <p class="inspiracao-texto">
-        Não é a informação cognitiva que move Helena. Quando uma amiga contou que amava a planta Amor Agarradinho, o que chegou até Helena foi <strong>o sentimento</strong> — o desejo da amiga pela planta, a emoção na voz. Foi esse sentimento que foi para o tecido, em forma de mandala cor de rosa sobre fundo verde. Cada peça começa em quem vai recebê-la.
-      </p>
+<!-- ══ INSPIRAÇÕES ══ -->
+<section class="insp-section">
+  <p class="s-label reveal">De onde vem a arte</p>
+  <h2 class="s-title reveal">As fontes da <em>inspiração</em></h2>
+  <div class="insp-grid">
+    <div class="insp-card reveal">
+      <h3>A energia de <em>quem vai usar</em></h3>
+      <p>Não é a informação cognitiva que move Helena. Quando uma amiga contou que amava a planta Amor Agarradinho, o que chegou foi <strong>o sentimento</strong> — o desejo, a emoção na voz. Foi esse sentimento que foi para o tecido, em forma de mandala cor de rosa sobre fundo verde.</p>
     </div>
-    <div class="inspiracao-card reveal reveal-delay-1">
-      <div class="inspiracao-card-accent mel"></div>
-      <h3 class="inspiracao-titulo">A troca de <em>energia</em></h3>
-      <p class="inspiracao-texto">
-        Em uma ocasião, foi pedido um trabalho na energia do sol. Helena montou uma playlist de frequências solares, se conectou com aquilo, e pintou. O resultado foi um varal de lenços que, quando exibidos pela primeira vez em público, <strong>fizeram pessoas voltarem dias depois procurando as peças</strong> que tinham visto. A energia estava no tecido.
-      </p>
+    <div class="insp-card reveal reveal-d1">
+      <h3>A troca de <em>energia</em></h3>
+      <p>Em uma ocasião, foi pedido um trabalho na energia do sol. Helena montou uma playlist de frequências solares e pintou. O resultado foi um varal de lenços que <strong>fez pessoas voltarem dias depois</strong> procurando as peças que tinham visto. A energia estava no tecido.</p>
     </div>
-    <div class="inspiracao-card reveal">
-      <div class="inspiracao-card-accent sage"></div>
-      <h3 class="inspiracao-titulo">A surpresa do <em>processo</em></h3>
-      <p class="inspiracao-texto">
-        Helena ama o que não se controla completamente. Com o Shibori — técnica japonesa de dobraduras e amarrações — você dobra o tecido, pinta, e só descobre o que criou quando abre. É uma magia. <strong>"Delicioso: você pega um pano grande, dobra pequeninho, pinta e quando abre é um desenho lindo maravilhoso."</strong>
-      </p>
+    <div class="insp-card reveal">
+      <h3>A surpresa do <em>processo</em></h3>
+      <p>Helena ama o que não se controla completamente. Com o Shibori, você dobra o tecido, pinta, e só descobre o que criou quando abre. <strong>"Você pega um pano grande, dobra pequeninho, pinta e quando abre é um desenho lindo maravilhoso."</strong></p>
     </div>
-    <div class="inspiracao-card reveal reveal-delay-1">
-      <div class="inspiracao-card-accent rosa"></div>
-      <h3 class="inspiracao-titulo">O encontro das <em>culturas</em></h3>
-      <p class="inspiracao-texto">
-        Uma técnica indiana que se junta com uma japonesa. O carimbo que nenhum outro artista tem — porque Helena faz os seus próprios. A marmorização europeia encontrando o batik asiático. Helena acredita que <strong>"o mundo se encontra no tecido"</strong> — e em cada peça, há sempre um diálogo entre tradições, culturas e momentos.
-      </p>
+    <div class="insp-card reveal reveal-d1">
+      <h3>O encontro das <em>culturas</em></h3>
+      <p>Uma técnica indiana que se junta com uma japonesa. O carimbo que nenhum outro artista tem — porque Helena faz os seus próprios. Helena acredita que <strong>"o mundo se encontra no tecido"</strong> — em cada peça, um diálogo entre tradições e momentos.</p>
     </div>
   </div>
 </section>
 
-<!-- PROCESSO -->
+<!-- ══ PROCESSO ══ -->
 <section class="processo-section">
-  <p class="section-eyebrow reveal">Do sentimento à peça</p>
-  <h2 class="section-title reveal">Como nasce<br><em>cada criação</em></h2>
-  <div class="processo-steps">
+  <p class="s-label reveal">Do sentimento à peça</p>
+  <h2 class="s-title reveal">Como nasce <em>cada criação</em></h2>
+  <div class="processo-grid">
     <div class="processo-step reveal">
-      <div class="processo-num">01</div>
+      <div class="processo-n">01</div>
       <p class="processo-titulo">A conversa</p>
-      <p class="processo-texto">Tudo começa no encontro. Uma palavra, um sentimento compartilhado, uma energia percebida. A peça já existe antes do primeiro traço.</p>
+      <p class="processo-texto">Tudo começa no encontro. Uma palavra, um sentimento, uma energia percebida. A peça já existe antes do primeiro traço.</p>
     </div>
-    <div class="processo-step reveal reveal-delay-1">
-      <div class="processo-num">02</div>
+    <div class="processo-step reveal reveal-d1">
+      <div class="processo-n">02</div>
       <p class="processo-titulo">A escolha do tecido</p>
       <p class="processo-texto">O tecido não é suporte — é parceiro. Cada fibra responde diferente à tinta. Helena prepara as próprias tintas, conhece cada reação.</p>
     </div>
-    <div class="processo-step reveal reveal-delay-2">
-      <div class="processo-num">03</div>
+    <div class="processo-step reveal reveal-d2">
+      <div class="processo-n">03</div>
       <p class="processo-titulo">A criação intuitiva</p>
       <p class="processo-texto">Ela lê a receita duas, três vezes — e depois inventa outra. A técnica é ponto de partida, não destino. O resultado sempre surpreende.</p>
     </div>
-    <div class="processo-step reveal reveal-delay-3">
-      <div class="processo-num">04</div>
+    <div class="processo-step reveal reveal-d3">
+      <div class="processo-n">04</div>
       <p class="processo-titulo">A entrega</p>
       <p class="processo-texto">A peça chega com a alegria de quem a fez. E isso, de alguma forma, a pessoa que recebe sente — em como usa, em como sorri, em como cuida.</p>
     </div>
   </div>
 </section>
 
-<!-- CITAÇÕES -->
+<!-- ══ CITAÇÕES ══ -->
 <section class="citacoes-section">
-  <p class="section-eyebrow reveal">Nas próprias palavras</p>
-  <h2 class="section-title reveal">Helena<br><em>fala</em></h2>
+  <p class="s-label reveal">Nas próprias palavras</p>
+  <h2 class="s-title reveal">Helena <em>fala</em></h2>
   <div class="citacoes-grid">
-    <div class="citacao-card reveal">
-      <p class="citacao-texto">"A inspiração não foi a informação cognitiva. Ela é o que eu percebi do <strong>sentimento</strong>. O que chegou pra mim foi um amor — e era isso que eu queria transmitir."</p>
+    <div class="citacao reveal">
+      <p>"A inspiração não foi a informação cognitiva. Foi o que eu percebi do <strong>sentimento</strong>. O que chegou pra mim foi um amor — e era isso que eu queria transmitir."</p>
     </div>
-    <div class="citacao-card reveal reveal-delay-1">
-      <p class="citacao-texto">"Eu sou aquela que lê a receita de bolo, coloca de lado, vai pra cozinha e faz <strong>outra coisa</strong>. E assim é com a arte e o design têxtil."</p>
+    <div class="citacao reveal reveal-d1">
+      <p>"Eu sou aquela que lê a receita de bolo, coloca de lado, e vai pra cozinha fazer <strong>outra coisa</strong>. E assim é com a arte e o design têxtil."</p>
     </div>
-    <div class="citacao-card reveal reveal-delay-2">
-      <p class="citacao-texto">"Uma técnica indiana se junta com uma japonesa e se forma uma coisa <strong>linda e encantadora</strong>. O mundo se encontra no tecido."</p>
+    <div class="citacao reveal reveal-d2">
+      <p>"Uma técnica indiana se junta com uma japonesa e se forma uma coisa <strong>linda e encantadora</strong>. O mundo se encontra no tecido."</p>
     </div>
-    <div class="citacao-card reveal">
-      <p class="citacao-texto">"Eu sabia que tava faltando algo na minha vida, mas nem eu mesma sabia o quê. O que não estava presente era <strong>a arte</strong>."</p>
+    <div class="citacao reveal">
+      <p>"Eu sabia que tava faltando algo na minha vida, mas nem eu mesma sabia o quê. O que não estava presente era <strong>a arte</strong>."</p>
     </div>
-    <div class="citacao-card reveal reveal-delay-1">
-      <p class="citacao-texto">"Aquela alegria que tenho em criar vai <strong>junto com a peça</strong>, e a pessoa recebe isso. De alguma forma, meu trabalho faz diferença."</p>
+    <div class="citacao reveal reveal-d1">
+      <p>"Aquela alegria que tenho em criar vai <strong>junto com a peça</strong>, e a pessoa recebe isso. De alguma forma, meu trabalho faz diferença."</p>
     </div>
-    <div class="citacao-card reveal reveal-delay-2">
-      <p class="citacao-texto">"Desde criança, quando queria dar um presente, <strong>eu construía</strong>. Nunca foi sobre ter dinheiro — sempre foi sobre ter amor."</p>
-    </div>
-  </div>
-</section>
-
-<!-- CTA FINAL -->
-<section class="contato-section" id="contato">
-  <div class="contato-inner">
-    <p class="section-eyebrow reveal">Agora que você me conhece</p>
-    <h2 class="section-title reveal">Vamos criar algo<br><em>só seu?</em></h2>
-    <p style="font-family:var(--font-display);font-size:1.15rem;color:var(--terra-light);margin:20px 0 40px;line-height:1.8;font-weight:300;font-style:italic" class="reveal">
-      Me conta uma história, um sentimento, uma pessoa que você quer presentear.<br>A arte começa aí.
-    </p>
-    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap" class="reveal">
-      <a href="https://wa.me/5515997193422?text=Oi+Helena!+Conheci+sua+história+e+quero+pedir+uma+peça+especial+%F0%9F%8C%B8" class="btn-primary" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Conversar com a Helena
-      </a>
-      <a href="index.html#produtos" class="btn-outline">Ver as peças</a>
+    <div class="citacao reveal reveal-d2">
+      <p>"Desde criança, quando queria dar um presente, <strong>eu construía</strong>. Nunca foi sobre ter dinheiro — sempre foi sobre ter amor."</p>
     </div>
   </div>
 </section>
 
+<!-- ══ CTA ══ -->
+<section class="cta-section">
+  <p class="s-label reveal">Agora que você me conhece</p>
+  <h2 class="s-title reveal">Vamos criar algo <em>só seu?</em></h2>
+  <p class="s-lead reveal">Me conta uma história, um sentimento, uma pessoa que você quer presentear. A arte começa aí.</p>
+  <div class="cta-btns reveal">
+    <a href="https://wa.me/5515997193422?text=Oi+Helena!+Conheci+sua+história+e+quero+pedir+uma+peça+especial+%F0%9F%8C%B8" class="btn btn-dark" target="_blank" rel="noopener">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Conversar com a Helena
+    </a>
+    <a href="index.html#produtos" class="btn btn-outline">Ver as peças</a>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-logo">Ateliê Art Presente</div>
   <p class="footer-copy">© <span id="ano"></span> Helena de Queiroz · Todos os direitos reservados</p>
-  <div class="footer-social">
+  <div class="footer-links">
     <a href="https://wa.me/5515997193422" target="_blank">WhatsApp</a>
-    <a href="https://instagram.com/artpresente" target="_blank">Instagram</a>
+    <a href="https://instagram.com/atelieartpresente" target="_blank">Instagram</a>
   </div>
 </footer>
 
