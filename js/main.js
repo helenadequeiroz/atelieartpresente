@@ -58,56 +58,71 @@ function reObserve(container) {
 //     Conteúdo markdown do corpo
 // ════════════════════════════════════════════
 function parseFrontmatter(text) {
-  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!match) return { data: {}, body: text };
+  const fm = text.match(/^---[\r\n]+([\s\S]*?)[\r\n]+---/);
+  if (!fm) return { data: {}, body: text.trim() };
 
-  const yaml = match[1];
-  const body = text.slice(match[0].length).trim();
+  const raw  = fm[1];
+  const body = text.slice(fm[0].length).trim();
   const data = {};
-  const lines = yaml.split('\n');
+
+  // Dividir em linhas mantendo \r
+  const lines = raw.split(/\r?\n/);
   let i = 0;
 
   while (i < lines.length) {
     const line = lines[i];
-    const keyMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)$/);
-    if (!keyMatch) { i++; continue; }
 
-    const key = keyMatch[1].trim();
-    let val   = keyMatch[2].trim();
+    // Ignorar linhas que não são chave: valor
+    const km = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)$/);
+    if (!km) { i++; continue; }
 
-    // Bloco literal YAML: "description: |" ou "description: >"
-    if (val === '|' || val === '>') {
-      const separator = val === '>' ? ' ' : '\n';
-      const blockLines = [];
+    const key = km[1];
+    const val = km[2].trim();
+
+    // ── BLOCO FOLDED/LITERAL: key: >  key: >-  key: |  key: |-
+    if (/^[>|]-?$/.test(val)) {
+      const fold = val[0] === '>';
+      const chunks = [];
       i++;
-      while (i < lines.length && (lines[i].startsWith('  ') || lines[i].trim() === '')) {
-        blockLines.push(lines[i].replace(/^  /, ''));
-        i++;
+      while (i < lines.length) {
+        const l = lines[i];
+        // linha do bloco: começa com pelo menos 1 espaço OU está vazia
+        if (/^\s/.test(l) || l.trim() === '') {
+          // remover indentação base de 2 espaços
+          chunks.push(l.startsWith('  ') ? l.slice(2) : l.replace(/^\s+/, ''));
+          i++;
+        } else {
+          break; // nova chave — sair do bloco
+        }
       }
-      data[key] = blockLines.join(separator).trim();
+      // folded: juntar com espaço (sem quebras)
+      data[key] = fold
+        ? chunks.join(' ').replace(/\s+/g, ' ').trim()
+        : chunks.join('\n').trim();
       continue;
     }
 
-    // Array de itens
-    if (val === '' && i + 1 < lines.length && lines[i + 1].match(/^\s+-/)) {
+    // ── ARRAY: próxima linha começa com espaço + hífen
+    if (val === '' && i + 1 < lines.length && /^\s+-/.test(lines[i + 1])) {
       const arr = [];
       i++;
-      while (i < lines.length && lines[i].match(/^\s+-/)) {
-        const itemLine = lines[i].replace(/^\s+-\s*/, '').trim();
-        if (itemLine.match(/^[a-zA-Z_]+\s*:/)) {
-          const obj = {};
-          const subMatch = itemLine.match(/^([a-zA-Z_]+)\s*:\s*(.*)$/);
-          if (subMatch) obj[subMatch[1]] = cleanYamlValue(subMatch[2]);
+      while (i < lines.length && /^\s+-/.test(lines[i])) {
+        const itemRaw = lines[i].replace(/^\s+-\s*/, '').trim();
+        // objeto inline? ex: "image: /path"
+        const objM = itemRaw.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)$/);
+        if (objM) {
+          const obj = { [objM[1]]: cleanYamlValue(objM[2]) };
           i++;
-          while (i < lines.length && lines[i].match(/^\s{2,}[a-zA-Z_]+\s*:/)) {
-            const sub = lines[i].match(/^\s+([a-zA-Z_]+)\s*:\s*(.*)$/);
+          // sub-propriedades indentadas do objeto
+          while (i < lines.length && /^\s{4,}[a-zA-Z]/.test(lines[i])) {
+            const sub = lines[i].match(/^\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)$/);
             if (sub) obj[sub[1]] = cleanYamlValue(sub[2]);
             i++;
           }
           arr.push(obj);
-          continue;
         } else {
-          arr.push(cleanYamlValue(itemLine));
+          // string simples: "  - /images/uploads/foto.jpg"
+          arr.push(cleanYamlValue(itemRaw));
           i++;
         }
       }
@@ -115,19 +130,13 @@ function parseFrontmatter(text) {
       continue;
     }
 
-    // Valor simples — pode ser multi-linha com indentação
-    // ex: description: "texto longo
-    //       continuação"
+    // ── VALOR SIMPLES
     data[key] = cleanYamlValue(val);
     i++;
   }
 
-  // Se description ainda vier vazia e o body tiver conteúdo, usar body
-  if (!data.description && body) data.description = body;
-
   return { data, body };
 }
-
 function cleanYamlValue(val) {
   if (val === 'true')  return true;
   if (val === 'false') return false;
@@ -185,10 +194,13 @@ async function fetchFolder(folder) {
 // ════════════════════════════════════════════
 function normalizeImages(raw) {
   if (!raw) return [];
-  if (typeof raw === 'string') return raw ? [raw] : [];
+  // string simples
+  if (typeof raw === 'string') return raw.trim() ? [raw.trim()] : [];
   if (Array.isArray(raw)) {
     return raw.map(item => {
-      if (typeof item === 'string') return item;
+      // array de strings simples: ["/images/uploads/foto.jpg"]
+      if (typeof item === 'string') return item.trim();
+      // array de objetos: [{image: "/images/..."}, ...]
       if (item && typeof item === 'object') {
         return item.image || item.src || item.url || Object.values(item)[0] || '';
       }
