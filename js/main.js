@@ -64,54 +64,66 @@ function parseFrontmatter(text) {
   const yaml = match[1];
   const body = text.slice(match[0].length).trim();
   const data = {};
-
-  // Parser YAML simples que cobre os campos do CMS
   const lines = yaml.split('\n');
   let i = 0;
+
   while (i < lines.length) {
     const line = lines[i];
-    // lista (item de array com indentação)
-    const listItemMatch = line.match(/^(\s+)-\s+(.*)$/);
-    const keyMatch      = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)$/);
+    const keyMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)$/);
+    if (!keyMatch) { i++; continue; }
 
-    if (keyMatch) {
-      const key = keyMatch[1].trim();
-      let val   = keyMatch[2].trim();
+    const key = keyMatch[1].trim();
+    let val   = keyMatch[2].trim();
 
-      // Verificar se a próxima linha é um array
-      if (val === '' && lines[i + 1] && lines[i + 1].match(/^\s+-/)) {
-        // array de itens
-        const arr = [];
+    // Bloco literal YAML: "description: |" ou "description: >"
+    if (val === '|' || val === '>') {
+      const separator = val === '>' ? ' ' : '\n';
+      const blockLines = [];
+      i++;
+      while (i < lines.length && (lines[i].startsWith('  ') || lines[i].trim() === '')) {
+        blockLines.push(lines[i].replace(/^  /, ''));
         i++;
-        while (i < lines.length && lines[i].match(/^\s+-/)) {
-          const itemLine = lines[i].replace(/^\s+-\s*/, '').trim();
-          // item pode ser string ou objeto inline
-          if (itemLine.match(/^[a-zA-Z_]+\s*:/)) {
-            // objeto com propriedades nas linhas seguintes
-            const obj = {};
-            const subMatch = itemLine.match(/^([a-zA-Z_]+)\s*:\s*(.*)$/);
-            if (subMatch) obj[subMatch[1]] = cleanYamlValue(subMatch[2]);
+      }
+      data[key] = blockLines.join(separator).trim();
+      continue;
+    }
+
+    // Array de itens
+    if (val === '' && i + 1 < lines.length && lines[i + 1].match(/^\s+-/)) {
+      const arr = [];
+      i++;
+      while (i < lines.length && lines[i].match(/^\s+-/)) {
+        const itemLine = lines[i].replace(/^\s+-\s*/, '').trim();
+        if (itemLine.match(/^[a-zA-Z_]+\s*:/)) {
+          const obj = {};
+          const subMatch = itemLine.match(/^([a-zA-Z_]+)\s*:\s*(.*)$/);
+          if (subMatch) obj[subMatch[1]] = cleanYamlValue(subMatch[2]);
+          i++;
+          while (i < lines.length && lines[i].match(/^\s{2,}[a-zA-Z_]+\s*:/)) {
+            const sub = lines[i].match(/^\s+([a-zA-Z_]+)\s*:\s*(.*)$/);
+            if (sub) obj[sub[1]] = cleanYamlValue(sub[2]);
             i++;
-            while (i < lines.length && lines[i].match(/^\s{2,}[a-zA-Z_]+\s*:/)) {
-              const sub = lines[i].match(/^\s+([a-zA-Z_]+)\s*:\s*(.*)$/);
-              if (sub) obj[sub[1]] = cleanYamlValue(sub[2]);
-              i++;
-            }
-            arr.push(obj);
-            continue;
-          } else {
-            arr.push(cleanYamlValue(itemLine));
           }
+          arr.push(obj);
+          continue;
+        } else {
+          arr.push(cleanYamlValue(itemLine));
           i++;
         }
-        data[key] = arr;
-        continue;
       }
-
-      data[key] = cleanYamlValue(val);
+      data[key] = arr;
+      continue;
     }
+
+    // Valor simples — pode ser multi-linha com indentação
+    // ex: description: "texto longo
+    //       continuação"
+    data[key] = cleanYamlValue(val);
     i++;
   }
+
+  // Se description ainda vier vazia e o body tiver conteúdo, usar body
+  if (!data.description && body) data.description = body;
 
   return { data, body };
 }
