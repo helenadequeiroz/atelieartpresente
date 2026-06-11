@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=DM+Sans:ital,wght@0,200;0,300;0,400;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
 
 /* ── TOKENS ── */
 :root {
@@ -19,7 +19,7 @@
   --grad-subtle: linear-gradient(150deg,rgba(237,213,206,.35) 0%,rgba(237,224,184,.25) 50%,rgba(200,218,204,.3) 100%);
 
   --f-serif: 'Cormorant', Georgia, serif;
-  --f-sans:  'DM Sans', system-ui, sans-serif;
+--f-sans:  'Inter', system-ui, sans-serif;
 
   --ease: cubic-bezier(.4,0,.2,1);
   --ease-out: cubic-bezier(.22,1,.36,1);
