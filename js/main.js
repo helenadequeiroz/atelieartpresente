@@ -1,5 +1,5 @@
 // ════════════════════════════════════════════
-//   ATELIÊ ART PRESENTE — main.js
+//   ATELIÊ ARTE PRESENTE — main.js
 // ════════════════════════════════════════════
 
 const GH_USER = 'helenadequeiroz';

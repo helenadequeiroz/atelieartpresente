@@ -1,4 +1,4 @@
-# Ateliê Art Presente — Site + CMS
+# Ateliê Arte Presente — Site + CMS
 
 Site estático com Decap CMS. Conteúdo gerenciado pelo painel em `/admin`.
 
