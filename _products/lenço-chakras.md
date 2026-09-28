@@ -1,9 +1,9 @@
 ---
 title: Lenço Chakras Premium
 category: lencos
-price: R$ 150,00
+price: R$ 85,00
 technique: tecnica usada
-size: 44x44
+size: 50X50
 available: true
 featured: true
 description: >-
@@ -17,5 +17,5 @@ description: >-
   Confeccionado em tecido leve e fluido, possui toque macio e caimento sofisticado, ideal para compor looks especiais, práticas terapêuticas, momentos de meditação ou simplesmente adicionar um toque de cor e significado ao seu dia.
 images:
   - /images/uploads/photo_4994620539880016868_y.jpg
-date: 2026-06-10T17:26:00.000-03:00
+date: 2026-09-27T21:05:00.000-03:00
 ---
